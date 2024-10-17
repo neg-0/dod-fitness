@@ -1,0 +1,300 @@
+openapi: 3.0.0
+info:
+  title: DoD Fitness App API
+  version: 1.0.0
+  description: API specification for the DoD Fitness App backend services
+
+servers:
+  - url: https://api.dodfitness.mil/v1
+
+paths:
+  /auth/login:
+    post:
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: New access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /profile:
+    get:
+      summary: Get user profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    
+    put:
+      summary: Update user profile
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Profile'
+      responses:
+        '200':
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /workout-plan:
+    post:
+      summary: Generate workout plan
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutPlanRequest'
+      responses:
+        '200':
+          description: Generated workout plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutPlan'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /nutrition-plan:
+    post:
+      summary: Generate nutrition plan
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NutritionPlanRequest'
+      responses:
+        '200':
+          description: Generated nutrition plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NutritionPlan'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    Unauthorized:
+      description: Unauthorized access
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+
+    AuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: integer
+
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        age:
+          type: integer
+        height:
+          type: number
+          description: Height in inches
+        weight:
+          type: number
+          description: Weight in pounds
+        branch:
+          type: string
+          enum: [Army, Navy, Air Force, Marines, Coast Guard, Space Force]
+        fitnessWaivers:
+          type: string
+        dietaryRestrictions:
+          type: string
+
+    WorkoutPlanRequest:
+      type: object
+      properties:
+        goal:
+          type: string
+          enum: [strength, endurance, weight_loss, general_fitness]
+        duration:
+          type: integer
+          description: Duration of the plan in weeks
+
+    WorkoutPlan:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        weeklyPlan:
+          type: array
+          items:
+            $ref: '#/components/schemas/DailyWorkout'
+
+    DailyWorkout:
+      type: object
+      properties:
+        day:
+          type: string
+          enum: [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
+        exercises:
+          type: array
+          items:
+            $ref: '#/components/schemas/Exercise'
+
+    Exercise:
+      type: object
+      properties:
+        name:
+          type: string
+        sets:
+          type: integer
+        reps:
+          type: integer
+        duration:
+          type: integer
+          description: Duration in minutes (for cardio exercises)
+
+    NutritionPlanRequest:
+      type: object
+      properties:
+        goal:
+          type: string
+          enum: [weight_loss, muscle_gain, maintenance]
+        dietaryRestrictions:
+          type: array
+          items:
+            type: string
+
+    NutritionPlan:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dailyCalories:
+          type: integer
+        macronutrients:
+          $ref: '#/components/schemas/Macronutrients'
+        meals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Meal'
+
+    Macronutrients:
+      type: object
+      properties:
+        protein:
+          type: integer
+          description: Grams of protein
+        carbohydrates:
+          type: integer
+          description: Grams of carbohydrates
+        fat:
+          type: integer
+          description: Grams of fat
+
+    Meal:
+      type: object
+      properties:
+        name:
+          type: string
+        foods:
+          type: array
+          items:
+            $ref: '#/components/schemas/Food'
+
+    Food:
+      type: object
+      properties:
+        name:
+          type: string
+        amount:
+          type: string
+        calories:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
