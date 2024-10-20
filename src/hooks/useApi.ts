@@ -1,10 +1,14 @@
-import { useState, useCallback, useEffect } from 'react';
-import { LoginRequest, AuthResponse } from '../api/types';
+import { useState, useCallback } from 'react';
+import { LoginRequest } from '../api/types';
 import { MockApi } from '../services/mockApi';
 import { mockLogin, mockRefreshToken } from '../services/mockAuth';
 import { mockStorage } from '../services/mockStorage';
+import { supabase } from '../lib/supabase';
+import openai from '../lib/openai';
 
 const USE_MOCK_API = true;
+
+
 
 export function useApi() {
   const [accessToken, setAccessToken] = useState<string | null>(mockStorage.getItem('accessToken'));
@@ -59,6 +63,85 @@ export function useApi() {
     }
   }, [api, logout]);
 
+  const createNutritionPlan = async (profileData: Record<string, any>) => {
+    try {
+      // Dynamically map all profile fields into a prompt
+      const profileFields = Object.entries(profileData)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join('\n');
+  
+      // Call OpenAI API to generate the nutrition plan
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You are a professional nutritionist." },
+          {
+            role: "user",
+            content: `Create a nutrition plan based on the following profile information:\n${profileFields}`
+          }
+        ]
+      });
+  
+      const generatedPlan = response.choices[0].message.content;
+  
+      // Save the generated plan to Supabase (with actual user ID)
+      const { error } = await supabase
+        .from('nutrition_plans')
+        .insert({
+          user_id: profileData.user_id,  // Replace with actual user ID from profile data
+          plan: generatedPlan,
+          ...profileData,  // Save the profile data along with the plan
+        });
+  
+      if (error) throw error;
+  
+      return { plan: generatedPlan };  // Return the generated plan
+    } catch (error) {
+      console.error('Error creating nutrition plan:', error);
+      throw error;
+    }
+  };
+
+
+  const createWorkoutPlan = async (profileData: Record<string, any>) => {
+    try {
+      // Dynamically map all profile fields into a prompt
+      const profileFields = Object.entries(profileData)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join('\n');
+  
+      // Call OpenAI API to generate the workout plan
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "You are a professional fitness trainer." },
+          {
+            role: "user",
+            content: `Create a workout plan based on the following profile information:\n${profileFields}`
+          }
+        ]
+      });
+  
+      const generatedPlan = response.choices[0].message.content;
+  
+      // Save the generated plan to Supabase (with actual user ID)
+      const { error } = await supabase
+        .from('workout_plans')
+        .insert({
+          user_id: profileData.user_id,  // Replace with actual user ID from profile data
+          plan: generatedPlan,
+          ...profileData,  // Save the profile data along with the plan
+        });
+  
+      if (error) throw error;
+  
+      return { plan: generatedPlan };  // Return the generated plan
+    } catch (error) {
+      console.error('Error creating workout plan:', error);
+      throw error;
+    }
+  };
+  
   return {
     api,
     login,
@@ -66,5 +149,7 @@ export function useApi() {
     refreshToken,
     isAuthenticated,
     setIsAuthenticated,
+    createWorkoutPlan,
+    createNutritionPlan,
   };
 }

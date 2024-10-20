@@ -4,7 +4,7 @@ import { useApi } from '../hooks/useApi';
 import { Profile as ProfileType } from '../api/types';
 
 const Profile: React.FC = () => {
-  const { api } = useApi();
+  const { api, createWorkoutPlan, createNutritionPlan } = useApi();
   const [profileData, setProfileData] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -46,6 +46,29 @@ const Profile: React.FC = () => {
       alert('Failed to update profile. Please try again.');
     }
   };
+
+  const handleGenerateWorkoutPlan = async () => {
+    if (!profileData) return;
+    
+    try {
+      const workoutPlan = await createWorkoutPlan(profileData);
+      console.log('Generated workout plan:', workoutPlan);
+    } catch (error) {
+      console.error('Error generating workout plan:', error);
+    }
+  };
+
+  const handleGenerateNutritionPlan = async () => {
+    if (!profileData) return;
+    
+    try {
+      const workoutPlan = await createNutritionPlan(profileData);
+      console.log('Generated nutrition plan:', workoutPlan);
+    } catch (error) {
+      console.error('Error generating nutrition plan:', error);
+    }
+  };
+  
 
   if (loading) {
     return <Typography>Loading profile...</Typography>;
@@ -142,6 +165,26 @@ const Profile: React.FC = () => {
               <Grid item xs={12}>
                 <Button type="submit" variant="contained" color="primary">
                   Update Profile
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleGenerateWorkoutPlan}
+                >
+                  Generate Workout Plan
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  variant="contained"
+                  color="warning"
+                  onClick={handleGenerateNutritionPlan}
+                >
+                  Generate Nutrition Plan
                 </Button>
               </Grid>
             </Grid>
