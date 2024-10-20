@@ -55,6 +55,8 @@ components:
         - height
         - weight
         - branch
+        - fitnessWaivers
+        - dietaryRestrictions
       properties:
         id:
           type: string
@@ -83,12 +85,44 @@ components:
           type: string
           enum: [Army, Navy, Air Force, Marines, Coast Guard, Space Force]
           example: Army
+        currentInstallation:
+          type: string
+          example: Fort Bragg
         fitnessWaivers:
           type: string
           example: None
         dietaryRestrictions:
           type: string
           example: Lactose intolerant
+        fitnessGoals:
+          type: string
+          example: Improve 5K run time
+        nutritionGoals:
+          type: string
+          example: Increase protein intake
+        fitnessPreferences:
+          type: string
+          example: Outdoor cardio, weight training
+        diningFacilityUsage:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 60
+        onBaseRestaurantUsage:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 20
+        offBaseRestaurantUsage:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 10
+        homeCookingFrequency:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 10
 
     ProfileUpdate:
       type: object
@@ -111,7 +145,31 @@ components:
         branch:
           type: string
           enum: [Army, Navy, Air Force, Marines, Coast Guard, Space Force]
+        currentInstallation:
+          type: string
         fitnessWaivers:
           type: string
         dietaryRestrictions:
           type: string
+        fitnessGoals:
+          type: string
+        nutritionGoals:
+          type: string
+        fitnessPreferences:
+          type: string
+        diningFacilityUsage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        onBaseRestaurantUsage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        offBaseRestaurantUsage:
+          type: integer
+          minimum: 0
+          maximum: 100
+        homeCookingFrequency:
+          type: integer
+          minimum: 0
+          maximum: 100

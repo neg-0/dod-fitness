@@ -16,6 +16,8 @@ tags:
     description: Workout plan operations
   - name: nutrition
     description: Nutrition plan operations
+  - name: dashboard
+    description: Dashboard module operations
 
 paths: {}
 
@@ -64,3 +66,12 @@ components:
           format: int32
         message:
           type: string
+
+    UserRole:
+      type: string
+      enum:
+        - SystemAdministrator
+        - UnitLeadership
+        - FitnessSpecialist
+        - NutritionSpecialist
+        - BaseMember

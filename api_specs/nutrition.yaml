@@ -44,6 +44,32 @@ paths:
         '404':
           $ref: '../openapi.yaml#/components/responses/NotFoundError'
 
+  /nutrition-plan/log:
+    post:
+      tags:
+        - nutrition
+      summary: Log daily nutrition intake
+      operationId: logNutritionIntake
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NutritionLog'
+      responses:
+        '201':
+          description: Nutrition intake logged successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NutritionLog'
+        '400':
+          $ref: '../openapi.yaml#/components/responses/ValidationError'
+        '401':
+          $ref: '../openapi.yaml#/components/responses/UnauthorizedError'
+
 components:
   schemas:
     NutritionPlanRequest:
@@ -141,3 +167,37 @@ components:
           format: int32
           minimum: 0
           example: 300
+
+    NutritionLog:
+      type: object
+      required:
+        - date
+        - calories
+        - protein
+        - carbs
+        - fat
+      properties:
+        date:
+          type: string
+          format: date
+          example: '2023-05-15'
+        calories:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 2000
+        protein:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 150
+        carbs:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 200
+        fat:
+          type: integer
+          format: int32
+          minimum: 0
+          example: 67
