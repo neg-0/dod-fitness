@@ -1,9 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography, Button, Card, CardContent, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { Activity, Utensils, UserCircle } from 'lucide-react';
 
 const Home: React.FC = () => {
+  useEffect(() => {
+    console.log('Home component mounted');
+    const start = performance.now();
+
+    return () => {
+      const end = performance.now();
+      console.log(`Home component unmounted. Render time: ${end - start}ms`);
+    };
+  }, []);
+
   return (
     <div className="text-center">
       <Typography variant="h2" component="h1" gutterBottom>

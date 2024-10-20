@@ -18,8 +18,16 @@ export type Profile = {
   height: number;
   weight: number;
   branch: 'Army' | 'Navy' | 'Air Force' | 'Marines' | 'Coast Guard' | 'Space Force';
+  currentInstallation?: string;
   fitnessWaivers: string;
   dietaryRestrictions: string;
+  fitnessGoals?: string;
+  nutritionGoals?: string;
+  fitnessPreferences?: string;
+  diningFacilityUsage?: number;
+  onBaseRestaurantUsage?: number;
+  offBaseRestaurantUsage?: number;
+  homeCookingFrequency?: number;
 };
 
 export type WorkoutPlanRequest = {

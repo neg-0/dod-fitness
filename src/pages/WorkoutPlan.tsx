@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Button, Card, CardContent } from '@mui/material';
 import { useApi } from '../hooks/useApi';
 import { WorkoutPlan as WorkoutPlanType } from '../api/types';
-import WorkoutWizard from '../components/WorkoutWizard';
-import WorkoutCalendar from '../components/WorkoutCalendar';
-import WorkoutDashboard from '../components/WorkoutDashboard';
+import WorkoutWizard from '../components/workout/WorkoutWizard';
+import WorkoutCalendar from '../components/workout/WorkoutCalendar';
+import WorkoutDashboard from '../components/workout/WorkoutDashboard';
 
 const WorkoutPlan: React.FC = () => {
   const { api } = useApi();
@@ -50,7 +50,8 @@ const WorkoutPlan: React.FC = () => {
         <Card className="mb-4">
           <CardContent>
             <Typography variant="body1" paragraph>
-              Create a personalized workout plan tailored to your fitness goals and DoD standards.
+              Create a personalized workout plan tailored to your fitness goals
+              and DoD standards.
             </Typography>
             <Button
               variant="contained"
@@ -63,12 +64,18 @@ const WorkoutPlan: React.FC = () => {
         </Card>
       )}
       {showWizard && (
-        <WorkoutWizard onComplete={handleWizardComplete} onCancel={() => setShowWizard(false)} />
+        <WorkoutWizard
+          onComplete={handleWizardComplete}
+          onCancel={() => setShowWizard(false)}
+        />
       )}
       {workoutPlan && (
         <>
           <WorkoutDashboard workoutPlan={workoutPlan} />
-          <WorkoutCalendar workoutPlan={workoutPlan} onUpdateWorkoutPlan={handleUpdateWorkoutPlan} />
+          <WorkoutCalendar
+            workoutPlan={workoutPlan}
+            onUpdateWorkoutPlan={handleUpdateWorkoutPlan}
+          />
         </>
       )}
     </div>

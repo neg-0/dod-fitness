@@ -1,13 +1,17 @@
 import React from 'react';
-import { Typography, Container, Link } from '@mui/material';
+import { Typography, Container, Link, Box } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 
 const Footer: React.FC = () => {
+  const theme = useTheme();
+
   return (
-    <footer className="bg-gray-200 py-4">
+    <Box component="footer" sx={{ bgcolor: theme.palette.primary.main, py: 3 }}>
       <Container maxWidth="lg">
-        <Typography variant="body2" color="text.secondary" align="center">
+        <Typography variant="body2" align="center" sx={{ color: theme.palette.primary.contrastText }}>
           © {new Date().getFullYear()} DoD Fitness App. All rights reserved.
-          <br />
+        </Typography>
+        <Typography variant="body2" align="center" sx={{ color: theme.palette.primary.contrastText }}>
           <Link color="inherit" href="#">
             Privacy Policy
           </Link>
@@ -17,7 +21,7 @@ const Footer: React.FC = () => {
           </Link>
         </Typography>
       </Container>
-    </footer>
+    </Box>
   );
 };
 
