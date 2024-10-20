@@ -45,10 +45,50 @@ The DoD Fitness App is a comprehensive web application designed to support the f
 - Responsive design for use on various devices
 - Offline mode for tracking workouts without internet connection
 
+## Enhanced Features
+
+### 6. Guardian Resilience Team (GRT) Integration
+- Specialist interface for personalized plan creation and management
+- Secure communication channel between specialists and users
+
+### 7. Base Food Facility Integration
+- Database of on-base food facilities with daily menus
+- Integration of dining options into nutrition plans
+- Healthy off-base restaurant suggestions
+
+### 8. On-base and Nearby Workout Location Mapping
+- Comprehensive list of fitness facilities and equipment inventories
+- Integration of running, hiking, and biking trails into workout plans
+
+### 9. Customizable User Profiles
+- Flexible system for setting and adjusting fitness and nutrition preferences
+- Tailored recommendations based on user preferences
+
+### 10. AI-powered Chatbot
+- Natural language interactions for plan queries and management
+- Integration with user data and facility information
+
+### 11. Gamification and Social Features
+- Achievement systems and challenges
+- Opt-in social networking and leaderboards
+
+### 12. Wearable Device Integration
+- APIs for syncing with fitness trackers and smartwatches
+- Real-time data analysis and plan adjustments
+
+### 13. Supplement and Hydration Tracking
+- Personalized supplement recommendations
+- Hydration monitoring and reminder system
+
+### 14. Machine Learning-driven Optimization
+- Performance prediction algorithms
+- AI-generated plan optimization suggestions
+- Adaptive planning based on user progress
+
 ## Technology Stack
 
 - Frontend: React with TypeScript
-- Backend: Node.js (simulated for this project)
+- Backend: Node.js with NestJS (simulated for this project)
 - State Management: React Hooks
 - UI Framework: Material-UI
 - Build Tool: Vite
@@ -60,4 +100,4 @@ The DoD Fitness App is a comprehensive web application designed to support the f
 - Virtual coaching and AI-driven workout adjustments
 - Expanded library of exercise demonstrations and technique guides
 
-By focusing on these goals and features, the DoD Fitness App aims to become an essential tool for maintaining and improving the fitness of military personnel across all branches of service.
+By focusing on these goals, features, and enhancements, the DoD Fitness App aims to become an essential tool for maintaining and improving the fitness of military personnel across all branches of service.
