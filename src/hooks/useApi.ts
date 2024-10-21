@@ -77,7 +77,7 @@ export function useApi() {
           { role: "system", content: "You are a professional nutritionist." },
           {
             role: "user",
-            content: `Create a nutrition plan based on the following profile information:\n${profileFields} in this format to saved to a TEXT column in my sql database: :
+            content: `Create a nutrition plan based on the following profile information:\n${profileFields}.Please respond with only the JSON output. This is an example for how I'd like the JSON object structured:
                 "dailyCalories": 2300,
                 "macronutrients": {
                     "protein": 173,
@@ -235,7 +235,7 @@ export function useApi() {
           { role: "system", content: "You are a professional fitness trainer." },
           {
             role: "user",
-            content: `Create a workout plan based on the following profile information:\n${profileFields} in this format to saved to a TEXT column in my sql database: 
+            content: `Create a workout plan based on the following profile information:\n${profileFields}. Please respond with only the JSON output. This is an example for how I'd like the JSON object structured: 
 
               "startDate": "2024-10-20T21:22:41.187Z",
               "endDate": "2025-10-25T22:22:41.187Z",
