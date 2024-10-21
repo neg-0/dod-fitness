@@ -77,20 +77,138 @@ export function useApi() {
           { role: "system", content: "You are a professional nutritionist." },
           {
             role: "user",
-            content: `Create a nutrition plan based on the following profile information:\n${profileFields}`
+            content: `Create a nutrition plan based on the following profile information:\n${profileFields} in this format to saved to a TEXT column in my sql database: :
+                "dailyCalories": 2300,
+                "macronutrients": {
+                    "protein": 173,
+                    "carbohydrates": 259,
+                    "fat": 64
+                },
+                "meals": [
+                    {
+                        "name": "Breakfast",
+                        "foods": [
+                            {
+                                "name": "Salmon",
+                                "amount": "190g",
+                                "calories": 199
+                            },
+                            {
+                                "name": "Whole Wheat Bread",
+                                "amount": "160g",
+                                "calories": 168
+                            },
+                            {
+                                "name": "Brown Rice",
+                                "amount": "210g",
+                                "calories": 214
+                            },
+                            {
+                                "name": "Quinoa",
+                                "amount": "100g",
+                                "calories": 109
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Lunch",
+                        "foods": [
+                            {
+                                "name": "Quinoa",
+                                "amount": "220g",
+                                "calories": 220
+                            },
+                            {
+                                "name": "Banana",
+                                "amount": "100g",
+                                "calories": 104
+                            },
+                            {
+                                "name": "Quinoa",
+                                "amount": "110g",
+                                "calories": 118
+                            },
+                            {
+                                "name": "Avocado",
+                                "amount": "180g",
+                                "calories": 186
+                            },
+                            {
+                                "name": "Egg Whites",
+                                "amount": "60g",
+                                "calories": 62
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Dinner",
+                        "foods": [
+                            {
+                                "name": "Greek Yogurt",
+                                "amount": "230g",
+                                "calories": 231
+                            },
+                            {
+                                "name": "Salmon",
+                                "amount": "120g",
+                                "calories": 127
+                            },
+                            {
+                                "name": "Egg Whites",
+                                "amount": "130g",
+                                "calories": 136
+                            },
+                            {
+                                "name": "Brown Rice",
+                                "amount": "190g",
+                                "calories": 196
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Snack",
+                        "foods": [
+                            {
+                                "name": "Greek Yogurt",
+                                "amount": "130g",
+                                "calories": 139
+                            },
+                            {
+                                "name": "Quinoa",
+                                "amount": "90g",
+                                "calories": 91
+                            }
+                        ]
+                    }
+                ]
+            }`
           }
         ]
       });
-  
+
+      if (!response.choices.length) {
+        throw new Error('No choices returned from OpenAI API');
+      }
       const generatedPlan = response.choices[0].message.content;
-  
-      // Save the generated plan to Supabase (with actual user ID)
+
       const { error } = await supabase
         .from('nutrition_plans')
         .insert({
-          user_id: profileData.user_id,  // Replace with actual user ID from profile data
+          name: profileData.name,
+          age: profileData.age,
+          height: profileData.height,
+          weight: profileData.weight,
+          branch: profileData.branch,
+          dietary_restrictions: profileData.dietary_restrictions,
+          resting_heart_rate: profileData.resting_heart_rate,
+          heart_rate_variability: profileData.heart_rate_variability,
+          vo2_max: profileData.vo2_max,
+          stress: profileData.stress,
+          body_battery: profileData.body_battery,
+          intensity: profileData.intensity,
+          goals: profileData.goals,
           plan: generatedPlan,
-          ...profileData,  // Save the profile data along with the plan
+          // Add any other relevant fields explicitly
         });
   
       if (error) throw error;
@@ -117,21 +235,172 @@ export function useApi() {
           { role: "system", content: "You are a professional fitness trainer." },
           {
             role: "user",
-            content: `Create a workout plan based on the following profile information:\n${profileFields}`
+            content: `Create a workout plan based on the following profile information:\n${profileFields} in this format to saved to a TEXT column in my sql database: 
+
+              "startDate": "2024-10-20T21:22:41.187Z",
+              "endDate": "2025-10-25T22:22:41.187Z",
+              "weeklyPlan": [
+                  {
+                      "day": "2024-10-20",
+                      "summary": "Rest Day",
+                      "duration": 0,
+                      "caloriesBurned": 0,
+                      "workoutType": "rest",
+                      "exercises": []
+                  },
+                  {
+                      "day": "2024-10-21",
+                      "summary": "Strength Training",
+                      "duration": 89,
+                      "caloriesBurned": 372,
+                      "workoutType": "strength",
+                      "exercises": [
+                          {
+                              "name": "Deadlifts",
+                              "sets": 2,
+                              "reps": 14
+                          },
+                          {
+                              "name": "Push-ups",
+                              "sets": 3,
+                              "reps": 11
+                          },
+                          {
+                              "name": "Squats",
+                              "sets": 2,
+                              "reps": 8
+                          },
+                          {
+                              "name": "Squats",
+                              "sets": 2,
+                              "reps": 6
+                          },
+                          {
+                              "name": "Squats",
+                              "sets": 2,
+                              "reps": 5
+                          },
+                          {
+                              "name": "Deadlifts",
+                              "sets": 3,
+                              "reps": 13
+                          }
+                      ]
+                  },
+                  {
+                      "day": "2024-10-22",
+                      "summary": "Cardio Blast",
+                      "duration": 40,
+                      "caloriesBurned": 324,
+                      "workoutType": "cardio",
+                      "exercises": [
+                          {
+                              "name": "Running",
+                              "duration": 5
+                          },
+                          {
+                              "name": "Rowing",
+                              "duration": 18
+                          },
+                          {
+                              "name": "Cycling",
+                              "duration": 12
+                          }
+                      ]
+                  },
+                  {
+                      "day": "2024-10-23",
+                      "summary": "Rest Day",
+                      "duration": 0,
+                      "caloriesBurned": 0,
+                      "workoutType": "rest",
+                      "exercises": []
+                  },
+                  {
+                      "day": "2024-10-24",
+                      "summary": "Yoga Flow",
+                      "duration": 41,
+                      "caloriesBurned": 255,
+                      "workoutType": "yoga",
+                      "exercises": [
+                          {
+                              "name": "Sun Salutation",
+                              "duration": 8
+                          },
+                          {
+                              "name": "Warrior Pose",
+                              "duration": 13
+                          },
+                          {
+                              "name": "Tree Pose",
+                              "duration": 10
+                          },
+                          {
+                              "name": "Downward Dog",
+                              "duration": 7
+                          },
+                          {
+                              "name": "Sun Salutation",
+                              "duration": 14
+                          },
+                          {
+                              "name": "Sun Salutation",
+                              "duration": 8
+                          }
+                      ]
+                  },
+                  {
+                      "day": "2024-10-25",
+                      "summary": "High-Intensity Interval Training",
+                      "duration": 40,
+                      "caloriesBurned": 177,
+                      "workoutType": "hiit",
+                      "exercises": [
+                          {
+                              "name": "Burpees",
+                              "duration": 12
+                          },
+                          {
+                              "name": "Box Jumps",
+                              "duration": 19
+                          },
+                          {
+                              "name": "Box Jumps",
+                              "duration": 6
+                          }
+                      ]
+                  }
+              ]
+          }`
           }
         ]
       });
   
+      if (!response.choices.length) {
+        throw new Error('No choices returned from OpenAI API');
+      }
       const generatedPlan = response.choices[0].message.content;
-  
-      // Save the generated plan to Supabase (with actual user ID)
+      
       const { error } = await supabase
         .from('workout_plans')
         .insert({
-          user_id: profileData.user_id,  // Replace with actual user ID from profile data
+          name: profileData.name,
+          age: profileData.age,
+          height: profileData.height,
+          weight: profileData.weight,
+          branch: profileData.branch,
+          dietary_restrictions: profileData.dietary_restrictions,
+          resting_heart_rate: profileData.resting_heart_rate,
+          heart_rate_variability: profileData.heart_rate_variability,
+          vo2_max: profileData.vo2_max,
+          stress: profileData.stress,
+          body_battery: profileData.body_battery,
+          intensity: profileData.intensity,
+          goals: profileData.goals,
           plan: generatedPlan,
-          ...profileData,  // Save the profile data along with the plan
+          // Add any other relevant fields explicitly
         });
+
   
       if (error) throw error;
   
@@ -141,7 +410,43 @@ export function useApi() {
       throw error;
     }
   };
+
+  const fetchWorkoutData = async () => {
+    try {
+      // Fetch the most recent workout plan from Supabase
+      const { data, error } = await supabase
+        .from('workout_plans')
+        .select('*') // Select all columns or specify the ones you need
+        .order('created_at', { ascending: false }) // Order by created_at, descending
+        .limit(1); // Limit to only 1 result
   
+      if (error) throw error;
+  
+      return data.length > 0 ? data[0] : null; // Return the most recent plan or null if none exist
+    } catch (error) {
+      console.error('Error fetching the most recent workout plan:', error);
+      throw error; // Rethrow the error to handle it elsewhere if needed
+    }
+  };
+
+const fetchNutritionData = async () => {
+  try {
+    // Fetch the most recent workout plan from Supabase
+    const { data, error } = await supabase
+      .from('nutrition_plans')
+      .select('*') // Select all columns or specify the ones you need
+      .order('created_at', { ascending: false }) // Order by created_at, descending
+      .limit(1); // Limit to only 1 result
+
+    if (error) throw error;
+
+    return data.length > 0 ? data[0] : null; // Return the most recent plan or null if none exist
+  } catch (error) {
+    console.error('Error fetching the most recent workout plan:', error);
+    throw error; // Rethrow the error to handle it elsewhere if needed
+  }
+};
+
   return {
     api,
     login,
@@ -151,5 +456,7 @@ export function useApi() {
     setIsAuthenticated,
     createWorkoutPlan,
     createNutritionPlan,
+    fetchWorkoutData,
+    fetchNutritionData,
   };
 }

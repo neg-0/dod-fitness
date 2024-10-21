@@ -47,28 +47,46 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleGenerateWorkoutPlan = async () => {
+  // const handleGenerateWorkoutPlan = async () => {
+  //   if (!profileData) return;
+    
+  //   try {
+  //     const workoutPlan = await createWorkoutPlan(profileData);
+  //     console.log('Generated workout plan:', workoutPlan);
+  //   } catch (error) {
+  //     console.error('Error generating workout plan:', error);
+  //   }
+  // };
+
+  // const handleGenerateNutritionPlan = async () => {
+  //   if (!profileData) return;
+    
+  //   try {
+  //     const nutritionPlan = await createNutritionPlan(profileData);
+  //     console.log('Generated nutrition plan:', nutritionPlan);
+  //   } catch (error) {
+  //     console.error('Error generating nutrition plan:', error);
+  //   }
+  // };
+
+  const handlePlans = async () => {
     if (!profileData) return;
     
     try {
+      const nutritionPlan = await createNutritionPlan(profileData);
+      console.log('Generated nutrition plan:', nutritionPlan);
+    } catch (error) {
+      console.error('Error generating nutrition plan:', error);
+    }
+
+    try {
       const workoutPlan = await createWorkoutPlan(profileData);
       console.log('Generated workout plan:', workoutPlan);
+      
     } catch (error) {
       console.error('Error generating workout plan:', error);
     }
   };
-
-  const handleGenerateNutritionPlan = async () => {
-    if (!profileData) return;
-    
-    try {
-      const workoutPlan = await createNutritionPlan(profileData);
-      console.log('Generated nutrition plan:', workoutPlan);
-    } catch (error) {
-      console.error('Error generating nutrition plan:', error);
-    }
-  };
-  
 
   if (loading) {
     return <Typography>Loading profile...</Typography>;
@@ -87,6 +105,7 @@ const Profile: React.FC = () => {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={3}>
+              {/* Existing Fields */}
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -163,11 +182,85 @@ const Profile: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="primary">
+                <TextField
+                  fullWidth
+                  label="Goals"
+                  name="goals"
+                  multiline
+                  rows={3}
+                  value={profileData.goals}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              {/* New Fields from Wearable Device */}
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Resting Heart Rate"
+                  name="restingHeartRate"
+                  type="number"
+                  value={profileData.restingHeartRate}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Heart Rate Variability"
+                  name="heartRateVariability"
+                  type="number"
+                  value={profileData.heartRateVariability}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="VO2 Max"
+                  name="vo2Max"
+                  type="number"
+                  value={profileData.vo2Max}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Stress Level"
+                  name="stress"
+                  type="number"
+                  value={profileData.stress}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Body Battery"
+                  name="bodyBattery"
+                  type="number"
+                  value={profileData.bodyBattery}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Intensity"
+                  name="intensity"
+                  type="number"
+                  value={profileData.intensity}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="primary"                         onClick={handlePlans}
+                >
                   Update Profile
                 </Button>
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Button
                   type="button"
                   variant="contained"
@@ -186,7 +279,7 @@ const Profile: React.FC = () => {
                 >
                   Generate Nutrition Plan
                 </Button>
-              </Grid>
+              </Grid> */}
             </Grid>
           </form>
         </CardContent>

@@ -3,36 +3,41 @@ import { Typography, Button, Card, CardContent, List, ListItem, ListItemText } f
 import { useApi } from '../hooks/useApi';
 import { NutritionPlan as NutritionPlanType } from '../api/types';
 
+
 const NutritionPlan: React.FC = () => {
-  const { api } = useApi();
+  const { api, fetchNutritionData, createNutritionPlan } = useApi();
   const [nutritionPlan, setNutritionPlan] = useState<NutritionPlanType | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Fetch the saved nutrition plan when the component mounts
   useEffect(() => {
-    const savedPlan = localStorage.getItem('nutritionPlan');
-    if (savedPlan) {
-      setNutritionPlan(JSON.parse(savedPlan));
-    }
-  }, []);
+    const loadNutritionPlan = async () => {
+      const savedPlan = await fetchNutritionData();
+      if (savedPlan) {
+        setNutritionPlan(savedPlan);
+      }
+    };
 
-  const generateNutritionPlan = async () => {
-    if (!api) return;
+    loadNutritionPlan();
+  }, [fetchNutritionData]);
 
-    setLoading(true);
-    try {
-      const response = await api.nutritionPlanPost({
-        goal: 'maintenance',
-        dietaryRestrictions: [],
-      });
-      setNutritionPlan(response.data);
-      localStorage.setItem('nutritionPlan', JSON.stringify(response.data));
-    } catch (error) {
-      console.error('Error generating nutrition plan:', error);
-      alert('Failed to generate nutrition plan. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleGenerateNutritionPlan = async () => {
+  //   setLoading(true);
+  //   try {
+  //     // Assuming dietaryRestrictions can be passed as an empty array for demo purposes
+  //     const generatedPlan = await createNutritionPlan(savedPlan);
+      
+  //     // Assuming createNutritionPlan returns the generated plan
+  //     setNutritionPlan(generatedPlan);
+  //     localStorage.setItem('nutritionPlan', JSON.stringify(generatedPlan));
+  //     console.log('Generated nutrition plan:', generatedPlan);
+  //   } catch (error) {
+  //     console.error('Error generating nutrition plan:', error);
+  //     alert('Failed to generate nutrition plan. Please try again.');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div>
@@ -47,7 +52,7 @@ const NutritionPlan: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={generateNutritionPlan}
+            // onClick={handleGenerateNutritionPlan}
             disabled={loading}
           >
             {loading ? 'Generating...' : 'Generate Nutrition Plan'}

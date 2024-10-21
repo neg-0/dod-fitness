@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export type AxiosResponse<T = any> = import('axios').AxiosResponse<T>;
 
 export type LoginRequest = {
@@ -12,14 +14,20 @@ export type AuthResponse = {
 };
 
 export type Profile = {
-  id: string;
+  goals: string;
   name: string;
   age: number;
   height: number;
   weight: number;
-  branch: 'Army' | 'Navy' | 'Air Force' | 'Marines' | 'Coast Guard' | 'Space Force';
   fitnessWaivers: string;
   dietaryRestrictions: string;
+  restingHeartRate: number; // New field
+  heartRateVariability: number; // New field
+  vo2Max: number; // New field
+  stress: number; // New field
+  bodyBattery: number; // New field
+  intensity: number; // New field
+  branch: 'Army' | 'Navy' | 'Air Force' | 'Marines' | 'Coast Guard' | 'Space Force';
 };
 
 export type WorkoutPlanRequest = {
@@ -47,6 +55,9 @@ export type DailyWorkout = {
 };
 
 export type WorkoutPlan = {
+  goal: ReactNode;
+  duration: ReactNode;
+  exercises: any;
   id: string;
   startDate: string;
   endDate: string;
