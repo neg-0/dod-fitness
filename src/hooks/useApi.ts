@@ -416,7 +416,7 @@ export function useApi() {
       // Fetch the most recent workout plan from Supabase
       const { data, error } = await supabase
         .from('workout_plans')
-        .select('*') // Select all columns or specify the ones you need
+        .select('plan') // Select all columns or specify the ones you need
         .order('created_at', { ascending: false }) // Order by created_at, descending
         .limit(1); // Limit to only 1 result
   
@@ -434,7 +434,7 @@ const fetchNutritionData = async () => {
     // Fetch the most recent workout plan from Supabase
     const { data, error } = await supabase
       .from('nutrition_plans')
-      .select('*') // Select all columns or specify the ones you need
+      .select('plan') // Select all columns or specify the ones you need
       .order('created_at', { ascending: false }) // Order by created_at, descending
       .limit(1); // Limit to only 1 result
 
@@ -442,7 +442,7 @@ const fetchNutritionData = async () => {
 
     return data.length > 0 ? data[0] : null; // Return the most recent plan or null if none exist
   } catch (error) {
-    console.error('Error fetching the most recent workout plan:', error);
+    console.error('Error fetching the most recent nutrition plan:', error);
     throw error; // Rethrow the error to handle it elsewhere if needed
   }
 };
