@@ -12,6 +12,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -29,23 +31,59 @@ const Login: React.FC = () => {
     age: '',
     branch: '',
   });
-  const { login } = useAuth();
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const { login, register } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await login(username, password, selectedRole as UserRole);
-    if (success) {
-      navigate('/', { replace: true });
-    } else {
-      alert('Login failed. Please check your credentials and try again.');
+    setError(null);
+    try {
+      const success = await login(username, password, selectedRole as UserRole);
+      if (success) {
+        navigate('/', { replace: true });
+      } else {
+        setError('Login failed. Please check your credentials and try again.');
+      }
+    } catch (err) {
+      setError('An error occurred during login. Please try again.');
     }
   };
 
   const handleRegistration = async () => {
-    console.log('Registration data:', registrationData);
-    setIsRegistering(false);
-    alert('Registration successful! You can now log in.');
+    setError(null);
+    if (!registrationData.username || !registrationData.password || !registrationData.name || !registrationData.age || !registrationData.branch) {
+      setError('Please fill in all required fields');
+      return;
+    }
+
+    try {
+      const success = await register({
+        username: registrationData.username,
+        password: registrationData.password,
+        name: registrationData.name,
+        age: parseInt(registrationData.age),
+        branch: registrationData.branch,
+      });
+
+      if (success) {
+        setSuccessMessage('Registration successful! You can now log in.');
+        setIsRegistering(false);
+        // Reset registration form
+        setRegistrationData({
+          username: '',
+          password: '',
+          name: '',
+          age: '',
+          branch: '',
+        });
+      } else {
+        setError('Registration failed. Username may already exist.');
+      }
+    } catch (err) {
+      setError('An error occurred during registration. Please try again.');
+    }
   };
 
   const handleDevLogin = async (role: UserRole) => {
@@ -58,11 +96,15 @@ const Login: React.FC = () => {
     };
 
     const { username, password } = devCredentials[role];
-    const success = await login(username, password, role);
-    if (success) {
-      navigate('/', { replace: true });
-    } else {
-      alert('Development login failed. Please check the mock user data.');
+    try {
+      const success = await login(username, password, role);
+      if (success) {
+        navigate('/', { replace: true });
+      } else {
+        setError('Development login failed. Please check the mock user data.');
+      }
+    } catch (err) {
+      setError('An error occurred during development login.');
     }
   };
 
@@ -70,14 +112,27 @@ const Login: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
         <CardContent>
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            className="text-center"
-          >
+          <Typography variant="h4" component="h1" gutterBottom className="text-center">
             DoD Fitness App Login
           </Typography>
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          <Snackbar
+            open={!!successMessage}
+            autoHideDuration={6000}
+            onClose={() => setSuccessMessage(null)}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert severity="success" onClose={() => setSuccessMessage(null)}>
+              {successMessage}
+            </Alert>
+          </Snackbar>
+
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
@@ -118,20 +173,17 @@ const Login: React.FC = () => {
               variant="contained"
               color="primary"
               fullWidth
-              sx={{
-                my: 1,
-              }}
+              sx={{ my: 1 }}
             >
               Log In
             </Button>
           </form>
+
           <Button
             variant="outlined"
             color="secondary"
             fullWidth
-            sx={{
-              my: 1,
-            }}
+            sx={{ my: 1 }}
             onClick={() => setIsRegistering(true)}
           >
             Register
@@ -210,6 +262,7 @@ const Login: React.FC = () => {
             bgcolor: 'background.paper',
             boxShadow: 24,
             p: 4,
+            borderRadius: 1,
           }}
         >
           <Typography variant="h6" component="h2" gutterBottom>
@@ -263,28 +316,45 @@ const Login: React.FC = () => {
             margin="normal"
             required
           />
-          <TextField
-            fullWidth
-            label="Military Branch"
-            value={registrationData.branch}
-            onChange={(e) =>
-              setRegistrationData({
-                ...registrationData,
-                branch: e.target.value,
-              })
-            }
-            margin="normal"
-            required
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            fullWidth
-            className="mt-4"
-            onClick={handleRegistration}
-          >
-            Register
-          </Button>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Military Branch</InputLabel>
+            <Select
+              value={registrationData.branch}
+              label="Military Branch"
+              onChange={(e) =>
+                setRegistrationData({
+                  ...registrationData,
+                  branch: e.target.value,
+                })
+              }
+              required
+            >
+              <MenuItem value="Army">Army</MenuItem>
+              <MenuItem value="Navy">Navy</MenuItem>
+              <MenuItem value="Air Force">Air Force</MenuItem>
+              <MenuItem value="Marines">Marines</MenuItem>
+              <MenuItem value="Coast Guard">Coast Guard</MenuItem>
+              <MenuItem value="Space Force">Space Force</MenuItem>
+            </Select>
+          </FormControl>
+          <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleRegistration}
+            >
+              Register
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              onClick={() => setIsRegistering(false)}
+            >
+              Cancel
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </div>

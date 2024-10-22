@@ -1,38 +1,44 @@
 import { useState, useCallback, useEffect } from 'react';
 import { LoginRequest, AuthResponse } from '../api/types';
-import { MockApi } from '../services/mockApi';
-import { mockLogin, mockRefreshToken } from '../services/mockAuth';
+import ApiFactory from '../services/apiConfig';
+import { mockLogin, mockRegister, mockRefreshToken } from '../services/mockAuth';
 import { mockStorage } from '../services/mockStorage';
 import { UserRole } from '../contexts/AuthContext';
-
-const USE_MOCK_API = true;
 
 interface User {
   id: string;
   username: string;
   role: UserRole;
+  name?: string;
+  age?: number;
+  branch?: string;
 }
 
 export function useApi() {
   const [accessToken, setAccessToken] = useState<string | null>(mockStorage.getItem('accessToken'));
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!accessToken);
   const [user, setUser] = useState<User | null>(null);
-  const [api, setApi] = useState<MockApi | null>(null);
 
   useEffect(() => {
-    if (USE_MOCK_API) {
-      const mockApi = new MockApi();
-      if (accessToken) {
-        mockApi.setAccessToken(accessToken);
-      }
-      setApi(mockApi);
+    const api = ApiFactory.getApi();
+    if (accessToken) {
+      api.setAccessToken(accessToken);
     }
   }, [isAuthenticated, accessToken]);
 
   const login = useCallback(async (username: string, password: string, role: UserRole) => {
     try {
       const loginRequest: LoginRequest = { username, password, role };
-      const authResponse = await mockLogin(loginRequest);
+      let authResponse: AuthResponse;
+
+      if (ApiFactory.getMode() === 'live') {
+        const api = ApiFactory.getApi();
+        const response = await api.authLoginPost(loginRequest);
+        authResponse = response.data;
+      } else {
+        authResponse = await mockLogin(loginRequest);
+      }
+
       setAccessToken(authResponse.access_token);
       setIsAuthenticated(true);
       mockStorage.setItem('accessToken', authResponse.access_token);
@@ -41,26 +47,31 @@ export function useApi() {
       return true;
     } catch (error) {
       console.error('Login failed:', error);
+      ApiFactory.handleApiFailure();
       return false;
     }
   }, []);
 
   const register = useCallback(async (userData: { username: string; password: string; name: string; age: number; branch: string }) => {
-    if (!api) return false;
     try {
-      await api.register(userData);
+      if (ApiFactory.getMode() === 'live') {
+        const api = ApiFactory.getApi();
+        await api.register(userData);
+      } else {
+        await mockRegister(userData);
+      }
       return true;
     } catch (error) {
       console.error('Registration failed:', error);
+      ApiFactory.handleApiFailure();
       return false;
     }
-  }, [api]);
+  }, []);
 
   const logout = useCallback(() => {
     setAccessToken(null);
     setIsAuthenticated(false);
     setUser(null);
-    setApi(null);
     mockStorage.removeItem('accessToken');
     mockStorage.removeItem('refreshToken');
   }, []);
@@ -72,13 +83,23 @@ export function useApi() {
     }
 
     try {
-      const authResponse = await mockRefreshToken();
+      let authResponse: AuthResponse;
+
+      if (ApiFactory.getMode() === 'live') {
+        const api = ApiFactory.getApi();
+        const response = await api.authRefreshPost();
+        authResponse = response.data;
+      } else {
+        authResponse = await mockRefreshToken();
+      }
+
       setAccessToken(authResponse.access_token);
       setIsAuthenticated(true);
       mockStorage.setItem('accessToken', authResponse.access_token);
       return true;
     } catch (error) {
       console.error('Token refresh failed:', error);
+      ApiFactory.handleApiFailure();
       logout();
       return false;
     }
@@ -94,7 +115,7 @@ export function useApi() {
   }, [isAuthenticated]);
 
   return {
-    api,
+    api: ApiFactory.getApi(),
     login,
     register,
     logout,

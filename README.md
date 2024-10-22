@@ -2,42 +2,39 @@
 
 Welcome to the DoD Fitness App, a comprehensive fitness and nutrition tracking application designed specifically for Department of Defense personnel.
 
-## Overview
+## API Switching Feature
 
-The DoD Fitness App is a web-based application that helps military personnel maintain their fitness levels, track workouts, and manage nutrition plans. It's tailored to meet the specific needs and standards of various military branches.
+The DoD Fitness App supports switching between a mock API and a live backend API. This feature allows for easy development and testing without relying on a live backend.
 
-## Key Features
+### Configuration
 
-- Personalized workout plans
-- Nutrition tracking and meal planning
-- Progress monitoring and reporting
-- Branch-specific fitness standards integration
+1. In the project root, create a `.env` file with the following content:
 
-## Documentation
+   ```
+   VITE_API_ENDPOINT=https://api.dodfitness.mil/v1
+   VITE_USE_LIVE_API=false
+   ```
 
-For detailed information about the project, please refer to the following documentation:
+2. Set `VITE_API_ENDPOINT` to the URL of your live backend API.
+3. Set `VITE_USE_LIVE_API` to `true` to use the live API by default, or `false` to use the mock API.
 
-- [Project Overview](docs/project-overview.md)
-- [Technical Specifications](docs/technical-specs.md)
-- [Design Philosophy](docs/design-philosophy.md)
-- [Installation Guide](docs/installation-guide.md)
-- [Usage Instructions](docs/usage-instructions.md)
-- [API Documentation](docs/api-documentation.md)
-- [Contribution Guidelines](docs/contribution-guidelines.md)
+### Usage
 
-## Quick Start
+- The current API mode (live or mock) is displayed in the footer of the application.
+- You can toggle between live and mock API modes using the switch in the footer.
+- The application will automatically fall back to the mock API if the live API fails repeatedly.
 
-To get started with the DoD Fitness App:
+### Development
 
-1. Clone the repository
-2. Install dependencies with `npm install`
-3. Start the development server with `npm run dev`
+When developing new features or testing, you can easily switch between the mock and live APIs without needing to restart the application. This allows for rapid development and testing of features that depend on backend data.
 
-For more detailed instructions, see the [Installation Guide](docs/installation-guide.md).
+## Installation and Setup
+
+(Include your existing installation and setup instructions here)
 
 ## Contributing
 
-We welcome contributions from the community. Please read our [Contribution Guidelines](docs/contribution-guidelines.md) before submitting any pull requests.
+(Include your existing contribution guidelines here)
 
 ## License
 

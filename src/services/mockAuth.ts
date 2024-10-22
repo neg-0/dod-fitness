@@ -6,6 +6,9 @@ interface MockUser {
   username: string;
   password: string;
   role: UserRole;
+  name?: string;
+  age?: number;
+  branch?: string;
 }
 
 const MOCK_USERS: MockUser[] = [
@@ -15,6 +18,40 @@ const MOCK_USERS: MockUser[] = [
   { id: '4', username: 'nutrition', password: 'nutrition123', role: 'NutritionSpecialist' },
   { id: '5', username: 'member', password: 'member123', role: 'BaseMember' },
 ];
+
+// Add registration function
+export const mockRegister = async (userData: {
+  username: string;
+  password: string;
+  name: string;
+  age: number;
+  branch: string;
+}): Promise<boolean> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // Check if username already exists
+      const existingUser = MOCK_USERS.find(user => user.username === userData.username);
+      if (existingUser) {
+        resolve(false);
+        return;
+      }
+
+      // Create new user
+      const newUser: MockUser = {
+        id: (MOCK_USERS.length + 1).toString(),
+        username: userData.username,
+        password: userData.password,
+        role: 'BaseMember', // New registrations are always base members
+        name: userData.name,
+        age: userData.age,
+        branch: userData.branch,
+      };
+
+      MOCK_USERS.push(newUser);
+      resolve(true);
+    }, 500);
+  });
+};
 
 export const mockLogin = (loginRequest: LoginRequest): Promise<AuthResponse> => {
   return new Promise((resolve, reject) => {
@@ -31,6 +68,9 @@ export const mockLogin = (loginRequest: LoginRequest): Promise<AuthResponse> => 
             id: user.id,
             username: user.username,
             role: user.role,
+            name: user.name,
+            age: user.age,
+            branch: user.branch,
           },
         };
         resolve(authResponse);
