@@ -1,6 +1,6 @@
 # DoD Fitness App Backend Service - Data Model
 
-This document outlines the core data entities and their relationships for the DoD Fitness App Backend Service. The data model is designed to support the app's key features while maintaining flexibility for future enhancements.
+This document outlines the core data entities and their relationships for the DoD Fitness App Backend Service. The data model is designed to support the app's key features while maintaining flexibility for future enhancements and aligning with our OpenAPI specifications.
 
 ## Core Entities
 
@@ -12,9 +12,11 @@ Represents a user of the DoD Fitness App.
 - username: String (Unique)
 - email: String (Unique)
 - passwordHash: String
-- role: Enum (User, Admin)
+- role: Enum (SystemAdministrator, UnitLeadership, FitnessSpecialist, NutritionSpecialist, BaseMember)
 - createdAt: DateTime
 - updatedAt: DateTime
+- isDeleted: Boolean
+- deletedAt: DateTime (nullable)
 
 ### 2. Profile
 
@@ -27,8 +29,16 @@ Stores detailed information about a user's physical characteristics and preferen
 - height: Float
 - weight: Float
 - branch: Enum (Army, Navy, Air Force, Marines, Coast Guard, Space Force)
+- currentInstallation: String
 - fitnessWaivers: Text
 - dietaryRestrictions: Text
+- fitnessGoals: Text
+- nutritionGoals: Text
+- fitnessPreferences: Text
+- diningFacilityUsage: Integer
+- onBaseRestaurantUsage: Integer
+- offBaseRestaurantUsage: Integer
+- homeCookingFrequency: Integer
 - createdAt: DateTime
 - updatedAt: DateTime
 
@@ -39,6 +49,7 @@ Represents a personalized workout plan for a user.
 - id: UUID (Primary Key)
 - userId: UUID (Foreign Key to User)
 - goal: Enum (strength, endurance, weight_loss, general_fitness)
+- branch: Enum (Army, Navy, Air Force, Marines, Coast Guard, Space Force)
 - startDate: Date
 - endDate: Date
 - createdAt: DateTime
@@ -81,6 +92,9 @@ Represents a personalized nutrition plan for a user.
 - userId: UUID (Foreign Key to User)
 - goal: Enum (weight_loss, muscle_gain, maintenance)
 - dailyCalories: Integer
+- protein: Integer
+- carbohydrates: Integer
+- fat: Integer
 - startDate: Date
 - endDate: Date
 - createdAt: DateTime
@@ -149,16 +163,18 @@ To optimize query performance, consider creating indexes on:
 
 ## Soft Deletes
 
-Consider implementing soft deletes for entities that may need to be restored or audited later:
+Implement soft deletes for the User entity:
 
-- Add an `isDeleted` boolean field to relevant entities
-- Add a `deletedAt` DateTime field to track when the soft delete occurred
+- Use the `isDeleted` boolean field to mark a user as deleted
+- Use the `deletedAt` DateTime field to track when the soft delete occurred
+
+Consider implementing similar soft delete functionality for other entities if needed.
 
 ## Auditing
 
 For enhanced tracking and compliance:
 
-- Consider adding `createdBy` and `updatedBy` fields to entities, referencing the User who performed the action
-- Implement an audit log table to track significant changes to critical data
+- Use the `createdAt` and `updatedAt` fields to track when entities are created and modified
+- Consider implementing an audit log table to track significant changes to critical data
 
-This data model provides a solid foundation for the DoD Fitness App Backend Service. It captures the essential entities and relationships required to support the app's core functionalities while allowing for future expansion and refinement as needed.
+This data model provides a solid foundation for the DoD Fitness App Backend Service. It captures the essential entities and relationships required to support the app's core functionalities while aligning with our OpenAPI specifications and database schema. This model allows for future expansion and refinement as needed.
