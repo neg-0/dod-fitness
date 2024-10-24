@@ -38,4 +38,8 @@ export class DefaultApi {
   async nutritionPlanPost(request: NutritionPlanRequest): Promise<AxiosResponse<NutritionPlan>> {
     return this.axiosInstance.post<NutritionPlan>('/nutrition-plan', request);
   }
+
+  async register(userData: { email: string; password: string; name: string; age: number; branch: string }): Promise<AxiosResponse<Profile>> {
+    return this.axiosInstance.post<Profile>('/auth/register', userData);
+  }
 }
