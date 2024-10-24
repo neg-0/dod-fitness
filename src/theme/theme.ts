@@ -84,7 +84,7 @@ export const createBranchTheme = (branch: MilitaryBranch): Theme => {
       MuiButton: {
         styleOverrides: {
           root: {
-            '&.MuiButton-text': {
+            'header &.MuiButton-text': { // Header buttons should have a lighter text to contrast the background
               color: colors.secondary,
             },
           },
