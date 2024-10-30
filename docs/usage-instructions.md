@@ -15,7 +15,7 @@ This guide provides an overview of how to use the DoD Fitness App, covering its 
 ## Logging In
 
 1. Open the DoD Fitness App in your web browser.
-2. On the login page, enter your username and password.
+2. On the login page, enter your email and password.
 3. Click the "Log In" button.
 4. For development purposes, you can use the "Bypass Login (Dev Only)" button.
 

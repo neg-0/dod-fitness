@@ -29,7 +29,7 @@ Authorization: Bearer <your_jwt_token>
 - **Body**:
   ```json
   {
-    "username": "string",
+    "email": "string",
     "password": "string"
   }
   ```

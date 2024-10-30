@@ -9,7 +9,6 @@ This document outlines the core data entities and their relationships for the Do
 Represents a user of the DoD Fitness App.
 
 - id: UUID (Primary Key)
-- username: String (Unique)
 - email: String (Unique)
 - passwordHash: String
 - role: Enum (SystemAdministrator, UnitLeadership, FitnessSpecialist, NutritionSpecialist, BaseMember)
@@ -149,7 +148,7 @@ Tracks a user's progress over time.
 
 To optimize query performance, consider creating indexes on:
 
-- User: username, email
+- User: email
 - Profile: userId
 - WorkoutPlan: userId, startDate, endDate
 - DailyWorkout: workoutPlanId, date
