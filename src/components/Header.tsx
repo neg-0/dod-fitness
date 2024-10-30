@@ -10,7 +10,7 @@ import {
   useTheme,
   Badge,
 } from '@mui/material';
-import { Dumbbell, Menu as MenuIcon, MessageCircle } from 'lucide-react';
+import { Dumbbell, Menu as MenuIcon, Bell } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -37,19 +37,31 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   const getNavItems = () => {
     const commonItems = [
       { label: 'Profile', path: '/profile' },
-      { label: 'Messages', path: '/messages' },
+      { label: 'Messages', path: '/messages', notifications: 3 },
     ];
 
     switch (user?.role) {
       case 'UnitLeadership':
-        return [{ label: 'Unit Dashboard', path: '/unit-leadership' }, ...commonItems];
+        return [
+          { label: 'My Dashboard', path: '/dashboard' },
+          { label: 'Unit Leadership Dashboard', path: '/unit-leadership' },
+          ...commonItems,
+        ];
       case 'FitnessSpecialist':
-        return [{ label: 'Fitness Dashboard', path: '/fitness-specialist' }, ...commonItems];
+        return [
+          { label: 'My Dashboard', path: '/dashboard' },
+          { label: 'Fitness Specialist Dashboard', path: '/fitness-specialist' },
+          ...commonItems,
+        ];
       case 'NutritionSpecialist':
-        return [{ label: 'Nutrition Dashboard', path: '/nutrition-specialist' }, ...commonItems];
+        return [
+          { label: 'My Dashboard', path: '/dashboard' },
+          { label: 'Nutrition Specialist Dashboard', path: '/nutrition-specialist' },
+          ...commonItems,
+        ];
       case 'BaseMember':
         return [
-          { label: 'Dashboard', path: '/base-member' },
+          { label: 'My Dashboard', path: '/dashboard' },
           { label: 'Workout Plan', path: '/workout-plan' },
           { label: 'Nutrition Plan', path: '/nutrition-plan' },
           ...commonItems,
@@ -62,19 +74,8 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   const navItems = getNavItems();
 
   const getHomeLink = () => {
-    if (!user) return '/';
-    switch (user.role) {
-      case 'UnitLeadership':
-        return '/unit-leadership';
-      case 'FitnessSpecialist':
-        return '/fitness-specialist';
-      case 'NutritionSpecialist':
-        return '/nutrition-specialist';
-      case 'BaseMember':
-        return '/base-member';
-      default:
-        return '/';
-    }
+    if (!user) return '/login';
+    return '/dashboard';
   };
 
   return (
@@ -132,13 +133,17 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                   }}
                 >
                   {item.label}
+                  {item.notifications && (
+                    <Badge
+                      badgeContent={item.notifications}
+                      color="secondary"
+                      sx={{ ml: 1 }}
+                    >
+                      <Bell size={16} />
+                    </Badge>
+                  )}
                 </Button>
               ))}
-              <IconButton color="inherit" component={Link} to="/messages">
-                <Badge badgeContent={3} color="secondary">
-                  <MessageCircle />
-                </Badge>
-              </IconButton>
               <Button
                 color="inherit"
                 onClick={handleLogout}

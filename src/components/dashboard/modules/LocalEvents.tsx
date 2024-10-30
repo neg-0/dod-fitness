@@ -37,7 +37,7 @@ LocalEvents.moduleMetadata = {
   title: "Local Events",
   description: "View upcoming fitness events in your area",
   icon: Calendar,
-  defaultLayout: { w: 2, h: 2, minW: 1, minH: 1 },
+  defaultLayout: { w: 2, h: 3, minW: 1, minH: 1 },
   roles: ['BaseMember', 'UnitLeadership', 'FitnessSpecialist', 'NutritionSpecialist'] as UserRole[],
 };
 

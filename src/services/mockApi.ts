@@ -1,4 +1,10 @@
-import { Profile, WorkoutPlan, NutritionPlan, WorkoutPlanRequest, NutritionPlanRequest } from '../api/types';
+import {
+  Profile,
+  WorkoutPlan,
+  NutritionPlan,
+  WorkoutPlanRequest,
+  NutritionPlanRequest,
+} from '../api/types';
 import { DefaultApi } from '../api/DefaultApi';
 import { mockStorage } from './mockStorage';
 import { generateMockWorkoutPlan } from './mockWorkoutPlan';
@@ -32,7 +38,13 @@ export class MockApi extends DefaultApi {
     return { data: mockPlan };
   }
 
-  async register(userData: { username: string; password: string; name: string; age: number; branch: string }) {
+  async register(userData: {
+    email: string;
+    password: string;
+    name: string;
+    age: number;
+    branch: string;
+  }) {
     // In a real API, you would create a new user account here
     // For this mock version, we'll just create a profile
     const newProfile: Profile = {

@@ -20,12 +20,12 @@ import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../contexts/AuthContext';
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [selectedRole, setSelectedRole] = useState<UserRole | ''>('');
   const [isRegistering, setIsRegistering] = useState(false);
   const [registrationData, setRegistrationData] = useState({
-    username: '',
+    email: '',
     password: '',
     name: '',
     age: '',
@@ -40,7 +40,7 @@ const Login: React.FC = () => {
     e.preventDefault();
     setError(null);
     try {
-      const success = await login(username, password, selectedRole as UserRole);
+      const success = await login(email, password, selectedRole as UserRole);
       if (success) {
         navigate('/', { replace: true });
       } else {
@@ -53,14 +53,20 @@ const Login: React.FC = () => {
 
   const handleRegistration = async () => {
     setError(null);
-    if (!registrationData.username || !registrationData.password || !registrationData.name || !registrationData.age || !registrationData.branch) {
+    if (
+      !registrationData.email ||
+      !registrationData.password ||
+      !registrationData.name ||
+      !registrationData.age ||
+      !registrationData.branch
+    ) {
       setError('Please fill in all required fields');
       return;
     }
 
     try {
       const success = await register({
-        username: registrationData.username,
+        email: registrationData.email,
         password: registrationData.password,
         name: registrationData.name,
         age: parseInt(registrationData.age),
@@ -72,14 +78,14 @@ const Login: React.FC = () => {
         setIsRegistering(false);
         // Reset registration form
         setRegistrationData({
-          username: '',
+          email: '',
           password: '',
           name: '',
           age: '',
           branch: '',
         });
       } else {
-        setError('Registration failed. Username may already exist.');
+        setError('Registration failed. Email may already exist.');
       }
     } catch (err) {
       setError('An error occurred during registration. Please try again.');
@@ -87,19 +93,25 @@ const Login: React.FC = () => {
   };
 
   const handleDevLogin = async (role: UserRole) => {
-    const devCredentials: Record<UserRole, { username: string; password: string }> = {
-      SystemAdministrator: { username: 'admin', password: 'admin123' },
-      UnitLeadership: { username: 'leader', password: 'leader123' },
-      FitnessSpecialist: { username: 'fitness', password: 'fitness123' },
-      NutritionSpecialist: { username: 'nutrition', password: 'nutrition123' },
-      BaseMember: { username: 'member', password: 'member123' },
+    const devCredentials: Record<
+      UserRole,
+      { email: string; password: string }
+    > = {
+      SystemAdministrator: { email: 'admin@atlas.mil', password: 'admin123' },
+      UnitLeadership: { email: 'leader@atlas.mil', password: 'leader123' },
+      FitnessSpecialist: { email: 'fitness@atlas.mil', password: 'fitness123' },
+      NutritionSpecialist: {
+        email: 'nutrition@atlas.mil',
+        password: 'nutrition123',
+      },
+      BaseMember: { email: 'member@atlas.mil', password: 'member123' },
     };
 
-    const { username, password } = devCredentials[role];
+    const { email, password } = devCredentials[role];
     try {
-      const success = await login(username, password, role);
+      const success = await login(email, password, role);
       if (success) {
-        navigate('/', { replace: true });
+        navigate('/dashboard', { replace: true });
       } else {
         setError('Development login failed. Please check the mock user data.');
       }
@@ -112,7 +124,12 @@ const Login: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-full max-w-md">
         <CardContent>
-          <Typography variant="h4" component="h1" gutterBottom className="text-center">
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            className="text-center"
+          >
             DoD Fitness App Login
           </Typography>
 
@@ -136,9 +153,9 @@ const Login: React.FC = () => {
           <form onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              label="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               margin="normal"
               required
             />
@@ -151,23 +168,6 @@ const Login: React.FC = () => {
               margin="normal"
               required
             />
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="role-select-label">Role</InputLabel>
-              <Select
-                labelId="role-select-label"
-                id="role-select"
-                value={selectedRole}
-                label="Role"
-                onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-                required
-              >
-                <MenuItem value="BaseMember">Base Member</MenuItem>
-                <MenuItem value="FitnessSpecialist">Fitness Specialist</MenuItem>
-                <MenuItem value="NutritionSpecialist">Nutrition Specialist</MenuItem>
-                <MenuItem value="UnitLeadership">Unit Leadership</MenuItem>
-                <MenuItem value="SystemAdministrator">System Administrator</MenuItem>
-              </Select>
-            </FormControl>
             <Button
               type="submit"
               variant="contained"
@@ -270,12 +270,12 @@ const Login: React.FC = () => {
           </Typography>
           <TextField
             fullWidth
-            label="Username"
-            value={registrationData.username}
+            label="Email"
+            value={registrationData.email}
             onChange={(e) =>
               setRegistrationData({
                 ...registrationData,
-                username: e.target.value,
+                email: e.target.value,
               })
             }
             margin="normal"

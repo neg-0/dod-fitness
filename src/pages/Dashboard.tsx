@@ -21,24 +21,22 @@ const DashboardContent: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      const userModules = moduleRegistry.getForRole(user.role).map((module) => module.moduleMetadata.id);
-      setActiveModules(userModules);
+      const userModules = moduleRegistry.getForRole(user.role);
+      const moduleIds = userModules.map(module => module.moduleMetadata.id);
+      setActiveModules(moduleIds);
 
       const initialLayouts = {
-        lg: userModules.map((moduleId, index) => {
-          const module = moduleRegistry.get(moduleId);
-          return {
-            i: moduleId,
-            x: (index * 2) % 12,
-            y: Math.floor(index / 6) * 4,
-            w: module?.moduleMetadata.defaultLayout.w || 2,
-            h: module?.moduleMetadata.defaultLayout.h || 2,
-            minW: module?.moduleMetadata.defaultLayout.minW,
-            maxW: module?.moduleMetadata.defaultLayout.maxW,
-            minH: module?.moduleMetadata.defaultLayout.minH,
-            maxH: module?.moduleMetadata.defaultLayout.maxH,
-          };
-        }),
+        lg: userModules.map(module => ({
+          i: module.moduleMetadata.id,
+          x: module.moduleMetadata.defaultLayout.x || 0,
+          y: module.moduleMetadata.defaultLayout.y || 0,
+          w: module.moduleMetadata.defaultLayout.w || 2,
+          h: module.moduleMetadata.defaultLayout.h || 2,
+          minW: module.moduleMetadata.defaultLayout.minW,
+          maxW: module.moduleMetadata.defaultLayout.maxW,
+          minH: module.moduleMetadata.defaultLayout.minH,
+          maxH: module.moduleMetadata.defaultLayout.maxH,
+        })),
       };
       setLayouts(initialLayouts);
     }
@@ -46,6 +44,11 @@ const DashboardContent: React.FC = () => {
 
   const handleLayoutChange = (_layout: any, layouts: any) => {
     setLayouts(layouts);
+    // Save layout to localStorage or backend
+    if (user) {
+      localStorage.setItem(`dashboard_layout_${user.id}`, JSON.stringify(layouts));
+      console.log("Layout:", JSON.stringify(layouts));
+    }
   };
 
   const handleAddModule = (moduleId: string) => {
@@ -101,7 +104,7 @@ const DashboardContent: React.FC = () => {
   return (
     <Box sx={{ flexGrow: 1,
         '.react-resizable-handle': {
-          zIndex: 1003, // This ensures the resizable handle is above overlay element
+          zIndex: 1003,
         },
     }}>
       <Box
@@ -134,11 +137,12 @@ const DashboardContent: React.FC = () => {
         className="layout"
         layouts={layouts}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+        cols={{ lg: 6, md: 6, sm: 4, xs: 4, xxs: 2 }}
         rowHeight={100}
         onLayoutChange={handleLayoutChange}
         isDraggable={editMode}
         isResizable={editMode}
+        margin={[16, 16]}
       >
         {activeModules.map((moduleId) => renderModule(moduleId))}
       </ResponsiveGridLayout>

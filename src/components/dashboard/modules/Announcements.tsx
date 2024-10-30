@@ -37,7 +37,7 @@ Announcements.moduleMetadata = {
   title: "Announcements",
   description: "Stay updated with important fitness and nutrition announcements",
   icon: Bell,
-  defaultLayout: { w: 2, h: 2, minW: 1, minH: 1 },
+  defaultLayout: { w: 2, h: 3, minW: 1, minH: 1 },
   roles: ['BaseMember', 'UnitLeadership', 'FitnessSpecialist', 'NutritionSpecialist'] as UserRole[],
 };
 

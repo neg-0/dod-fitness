@@ -59,7 +59,7 @@ TodaysWorkout.moduleMetadata = {
   title: "Today's Workout",
   description: 'View and start your workout for today',
   icon: Dumbbell,
-  defaultLayout: { w: 2, h: 2, minW: 1, minH: 1 },
+  defaultLayout: { w: 2, h: 4, minW: 1, minH: 1 },
   roles: ['BaseMember', 'UnitLeadership', 'FitnessSpecialist'] as UserRole[],
 };
 

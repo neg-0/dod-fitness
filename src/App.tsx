@@ -9,16 +9,19 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Header from './components/Header';
 import Footer from './components/Footer';
-import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
 import WorkoutPlan from './pages/WorkoutPlan';
 import NutritionPlan from './pages/NutritionPlan';
-import Profile from './pages/Profile';
-import Login from './pages/Login';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Messages from './pages/Messages';
+import Dashboard from './pages/Dashboard';
+import UnitLeadershipDashboard from './pages/UnitLeadershipDashboard';
+import FitnessSpecialistDashboard from './pages/FitnessSpecialistDashboard';
+import NutritionSpecialistDashboard from './pages/NutritionSpecialistDashboard';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { createBranchTheme, MilitaryBranch } from './theme/theme';
 import ChatIcon from './components/chat/ChatIcon';
 import ChatWindow from './components/chat/ChatWindow';
-import { createBranchTheme, MilitaryBranch } from './theme/theme';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: string[] }> = ({
   children,
@@ -31,7 +34,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
   }
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" />;
+    return <Navigate to="/dashboard" />;
   }
 
   return <>{children}</>;
@@ -39,9 +42,9 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
 
 const AppContent: React.FC = () => {
   const { isAuthenticated, logout, user } = useAuth();
-  const [showChat, setShowChat] = useState(false);
   const [branch, setBranch] = useState<MilitaryBranch>('Space Force');
   const [theme, setTheme] = useState(createBranchTheme(branch));
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     setTheme(createBranchTheme(branch));
@@ -55,6 +58,10 @@ const AppContent: React.FC = () => {
     setBranch(newBranch);
   };
 
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -64,7 +71,7 @@ const AppContent: React.FC = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
-              path="/"
+              path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
@@ -72,9 +79,33 @@ const AppContent: React.FC = () => {
               }
             />
             <Route
+              path="/unit-leadership"
+              element={
+                <ProtectedRoute allowedRoles={['UnitLeadership']}>
+                  <UnitLeadershipDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/fitness-specialist"
+              element={
+                <ProtectedRoute allowedRoles={['FitnessSpecialist']}>
+                  <FitnessSpecialistDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/nutrition-specialist"
+              element={
+                <ProtectedRoute allowedRoles={['NutritionSpecialist']}>
+                  <NutritionSpecialistDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/workout-plan"
               element={
-                <ProtectedRoute allowedRoles={['BaseMember', 'FitnessSpecialist']}>
+                <ProtectedRoute allowedRoles={['BaseMember']}>
                   <WorkoutPlan />
                 </ProtectedRoute>
               }
@@ -82,7 +113,7 @@ const AppContent: React.FC = () => {
             <Route
               path="/nutrition-plan"
               element={
-                <ProtectedRoute allowedRoles={['BaseMember', 'NutritionSpecialist']}>
+                <ProtectedRoute allowedRoles={['BaseMember']}>
                   <NutritionPlan />
                 </ProtectedRoute>
               }
@@ -103,24 +134,25 @@ const AppContent: React.FC = () => {
                 </ProtectedRoute>
               }
             />
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>
         <Footer />
+        {isAuthenticated && (
+          <>
+            <ChatIcon onClick={toggleChat} />
+            {isChatOpen && (
+              <ChatWindow
+                onClose={() => setIsChatOpen(false)}
+                userProfile={user}
+                workoutData={{}}
+                nutritionData={{}}
+              />
+            )}
+          </>
+        )}
       </div>
-      {isAuthenticated && (
-        <>
-          <ChatIcon onClick={() => setShowChat(true)} />
-          {showChat && (
-            <ChatWindow
-              onClose={() => setShowChat(false)}
-              userProfile={user}
-              workoutData={null}
-              nutritionData={null}
-            />
-          )}
-        </>
-      )}
     </ThemeProvider>
   );
 };

@@ -1,13 +1,17 @@
 import { useState, useCallback, useEffect } from 'react';
 import { LoginRequest, AuthResponse } from '../api/types';
 import ApiFactory from '../services/apiConfig';
-import { mockLogin, mockRegister, mockRefreshToken } from '../services/mockAuth';
+import {
+  mockLogin,
+  mockRegister,
+  mockRefreshToken,
+} from '../services/mockAuth';
 import { mockStorage } from '../services/mockStorage';
 import { UserRole } from '../contexts/AuthContext';
 
 interface User {
   id: string;
-  username: string;
+  email: string;
   role: UserRole;
   name?: string;
   age?: number;
@@ -15,8 +19,12 @@ interface User {
 }
 
 export function useApi() {
-  const [accessToken, setAccessToken] = useState<string | null>(mockStorage.getItem('accessToken'));
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!accessToken);
+  const [accessToken, setAccessToken] = useState<string | null>(
+    mockStorage.getItem('accessToken')
+  );
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
+    !!accessToken
+  );
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -26,47 +34,59 @@ export function useApi() {
     }
   }, [isAuthenticated, accessToken]);
 
-  const login = useCallback(async (username: string, password: string, role: UserRole) => {
-    try {
-      const loginRequest: LoginRequest = { username, password, role };
-      let authResponse: AuthResponse;
+  const login = useCallback(
+    async (email: string, password: string, role: UserRole) => {
+      try {
+        const loginRequest: LoginRequest = { email, password, role };
+        let authResponse: AuthResponse;
 
-      if (ApiFactory.getMode() === 'live') {
-        const api = ApiFactory.getApi();
-        const response = await api.authLoginPost(loginRequest);
-        authResponse = response.data;
-      } else {
-        authResponse = await mockLogin(loginRequest);
+        if (ApiFactory.getMode() === 'live') {
+          const api = ApiFactory.getApi();
+          const response = await api.authLoginPost(loginRequest);
+          authResponse = response.data;
+        } else {
+          authResponse = await mockLogin(loginRequest);
+        }
+
+        setAccessToken(authResponse.access_token);
+        setIsAuthenticated(true);
+        mockStorage.setItem('accessToken', authResponse.access_token);
+        mockStorage.setItem('refreshToken', authResponse.refresh_token);
+        setUser(authResponse.user);
+        return true;
+      } catch (error) {
+        console.error('Login failed:', error);
+        ApiFactory.handleApiFailure();
+        return false;
       }
+    },
+    []
+  );
 
-      setAccessToken(authResponse.access_token);
-      setIsAuthenticated(true);
-      mockStorage.setItem('accessToken', authResponse.access_token);
-      mockStorage.setItem('refreshToken', authResponse.refresh_token);
-      setUser(authResponse.user);
-      return true;
-    } catch (error) {
-      console.error('Login failed:', error);
-      ApiFactory.handleApiFailure();
-      return false;
-    }
-  }, []);
-
-  const register = useCallback(async (userData: { username: string; password: string; name: string; age: number; branch: string }) => {
-    try {
-      if (ApiFactory.getMode() === 'live') {
-        const api = ApiFactory.getApi();
-        await api.register(userData);
-      } else {
-        await mockRegister(userData);
+  const register = useCallback(
+    async (userData: {
+      email: string;
+      password: string;
+      name: string;
+      age: number;
+      branch: string;
+    }) => {
+      try {
+        if (ApiFactory.getMode() === 'live') {
+          const api = ApiFactory.getApi();
+          await api.register(userData);
+        } else {
+          await mockRegister(userData);
+        }
+        return true;
+      } catch (error) {
+        console.error('Registration failed:', error);
+        ApiFactory.handleApiFailure();
+        return false;
       }
-      return true;
-    } catch (error) {
-      console.error('Registration failed:', error);
-      ApiFactory.handleApiFailure();
-      return false;
-    }
-  }, []);
+    },
+    []
+  );
 
   const logout = useCallback(() => {
     setAccessToken(null);

@@ -26,7 +26,7 @@ DailyMotivation.moduleMetadata = {
   title: "Daily Motivation",
   description: "Get inspired with a daily motivational quote",
   icon: Lightbulb,
-  defaultLayout: { w: 2, h: 1, minW: 1, minH: 1 },
+  defaultLayout: { w: 4, h: 1, minW: 1, minH: 1 },
   roles: ['BaseMember', 'UnitLeadership', 'FitnessSpecialist', 'NutritionSpecialist'] as UserRole[],
 };
 

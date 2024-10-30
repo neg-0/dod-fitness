@@ -1,11 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useApi } from '../hooks/useApi';
 
-export type UserRole = 'SystemAdministrator' | 'UnitLeadership' | 'FitnessSpecialist' | 'NutritionSpecialist' | 'BaseMember';
+export type UserRole =
+  | 'SystemAdministrator'
+  | 'UnitLeadership'
+  | 'FitnessSpecialist'
+  | 'NutritionSpecialist'
+  | 'BaseMember';
 
 interface User {
   id: string;
-  username: string;
+  email: string;
   role: UserRole;
   name?: string;
   age?: number;
@@ -15,16 +20,31 @@ interface User {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  login: (username: string, password: string, role: UserRole) => Promise<boolean>;
-  register: (userData: { username: string; password: string; name: string; age: number; branch: string; }) => Promise<boolean>;
+  login: (email: string, password: string, role: UserRole) => Promise<boolean>;
+  register: (userData: {
+    email: string;
+    password: string;
+    name: string;
+    age: number;
+    branch: string;
+  }) => Promise<boolean>;
   logout: () => void;
   checkAuthStatus: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { login: apiLogin, register: apiRegister, logout: apiLogout, checkAuthStatus: apiCheckAuthStatus, isAuthenticated, user } = useApi();
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const {
+    login: apiLogin,
+    register: apiRegister,
+    logout: apiLogout,
+    checkAuthStatus: apiCheckAuthStatus,
+    isAuthenticated,
+    user,
+  } = useApi();
   const [authUser, setAuthUser] = useState(user);
 
   useEffect(() => {
@@ -35,15 +55,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setAuthUser(user);
   }, [user]);
 
-  const login = async (username: string, password: string, role: UserRole) => {
-    const success = await apiLogin(username, password, role);
+  const login = async (email: string, password: string, role: UserRole) => {
+    const success = await apiLogin(email, password, role);
     if (success) {
       setAuthUser(user);
     }
     return success;
   };
 
-  const register = async (userData: { username: string; password: string; name: string; age: number; branch: string; }) => {
+  const register = async (userData: {
+    email: string;
+    password: string;
+    name: string;
+    age: number;
+    branch: string;
+  }) => {
     return await apiRegister(userData);
   };
 

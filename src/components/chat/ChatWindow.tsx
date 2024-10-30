@@ -1,15 +1,20 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
-  Card,
-  CardContent,
-  Typography,
-  TextField,
+  Dialog,
+  DialogContent,
+  DialogActions,
   Button,
-  IconButton,
+  Typography,
   Box,
+  IconButton,
+  TextField,
+  Avatar,
+  useTheme,
 } from '@mui/material';
 import { X, Send } from 'lucide-react';
 import { styled } from '@mui/material/styles';
+import { sendChatMessage, getChatHistory, saveChatHistory, ChatMessage } from '../../services/chatService';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface ChatWindowProps {
   onClose: () => void;
@@ -18,7 +23,7 @@ interface ChatWindowProps {
   nutritionData: any;
 }
 
-const ChatCard = styled(Card)(({ theme }) => ({
+const ChatContainer = styled(Box)(({ theme }) => ({
   position: 'fixed',
   bottom: '110px',
   right: '20px',
@@ -27,7 +32,9 @@ const ChatCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   zIndex: 1001,
-  boxShadow: '0px 0px 10px rgba(0,0,0,0.1)',
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[10],
   [theme.breakpoints.down('sm')]: {
     width: '100%',
     height: '100%',
@@ -64,26 +71,17 @@ const MessageBubble = styled(Box, {
   borderRadius: '18px',
   marginBottom: theme.spacing(1),
   wordWrap: 'break-word',
-  color: isUser
-    ? theme.palette.primary.contrastText
-    : theme.palette.text.primary,
-  backgroundColor: isUser
-    ? theme.palette.primary.main
-    : theme.palette.grey[200],
+  color: isUser ? theme.palette.primary.contrastText : theme.palette.text.primary,
+  backgroundColor: isUser ? theme.palette.primary.main : theme.palette.grey[200],
   alignSelf: isUser ? 'flex-end' : 'flex-start',
-  animation: 'fadeIn 0.3s ease-in-out',
-  '@keyframes fadeIn': {
-    from: { opacity: 0, transform: 'translateY(10px)' },
-    to: { opacity: 1, transform: 'translateY(0)' },
-  },
 }));
 
-const ScrollToBottomButton = styled(Button)(({ theme }) => ({
-  position: 'absolute',
-  bottom: '70px',
-  right: '20px',
-  zIndex: 1002,
-}));
+const specialists = [
+  'AI Assistant',
+  'Guardian Resilience Team',
+  'Nutritionist',
+  'Fitness Trainer',
+];
 
 const ChatWindow: React.FC<ChatWindowProps> = ({
   onClose,
@@ -91,23 +89,27 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
   workoutData,
   nutritionData,
 }) => {
-  const [selectedSpecialist, setSelectedSpecialist] = useState<string | null>(
-    null
-  );
-  const [messages, setMessages] = useState<{ sender: string; text: string }[]>(
-    []
-  );
+  const theme = useTheme();
+  const { user } = useAuth();
+  const [selectedSpecialist, setSelectedSpecialist] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const chatContentRef = useRef<HTMLDivElement>(null);
-  const [showScrollButton, setShowScrollButton] = useState(false);
 
-  const specialists = [
-    'AI Assistant',
-    'Guardian Resilience Team',
-    'Nutritionist',
-    'Fitness Trainer',
-  ];
+  useEffect(() => {
+    if (user) {
+      const history = getChatHistory(user.id);
+      setMessages(history);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      saveChatHistory(user.id, messages);
+    }
+    scrollToBottom();
+  }, [messages, user]);
 
   const scrollToBottom = () => {
     if (chatContentRef.current) {
@@ -115,78 +117,67 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     }
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
   const handleSpecialistSelect = useCallback((specialist: string) => {
     setSelectedSpecialist(specialist);
-    setMessages([
-      { sender: 'System', text: `You are now chatting with ${specialist}` },
-    ]);
+    const systemMessage: ChatMessage = {
+      id: Date.now().toString(),
+      sender: 'System',
+      text: `You are now chatting with ${specialist}`,
+      timestamp: new Date().toISOString(),
+    };
+    setMessages([systemMessage]);
   }, []);
 
-  const handleSendMessage = useCallback(() => {
-    if (inputMessage.trim() === '') return;
+  const handleSendMessage = useCallback(async () => {
+    if (!inputMessage.trim() || !selectedSpecialist || !user) return;
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { sender: 'User', text: inputMessage },
-    ]);
+    const userMessage: ChatMessage = {
+      id: Date.now().toString(),
+      sender: 'User',
+      text: inputMessage,
+      timestamp: new Date().toISOString(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
     setIsTyping(true);
 
-    // Simulate a response from the specialist
-    setTimeout(() => {
-      let response = '';
-      switch (selectedSpecialist) {
-        case 'AI Assistant':
-          response = `Based on your profile and recent activity, I recommend focusing on ${
-            workoutData?.goal || 'your fitness goals'
-          }.`;
-          break;
-        case 'Guardian Resilience Team':
-          response =
-            'How can I assist you with your mental health and resilience today?';
-          break;
-        case 'Nutritionist':
-          response = `Your current nutrition plan suggests a daily intake of ${
-            nutritionData?.dailyCalories || 2000
-          } calories. How can I help you optimize your diet?`;
-          break;
-        case 'Fitness Trainer':
-          response =
-            "Let's review your recent workout performance and adjust your plan accordingly.";
-          break;
-        default:
-          response = 'How can I assist you today?';
-      }
-      setIsTyping(false);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { sender: selectedSpecialist || 'Specialist', text: response },
-      ]);
-    }, 1500);
-  }, [inputMessage, selectedSpecialist, workoutData, nutritionData]);
+    try {
+      const response = await sendChatMessage(user.id, inputMessage, selectedSpecialist);
+      
+      const specialistMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: selectedSpecialist,
+        text: response,
+        timestamp: new Date().toISOString(),
+      };
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-    setShowScrollButton(scrollHeight - scrollTop > clientHeight + 100);
-  };
+      setMessages(prev => [...prev, specialistMessage]);
+    } catch (error) {
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: 'System',
+        text: 'Failed to send message. Please try again.',
+        timestamp: new Date().toISOString(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
+  }, [inputMessage, selectedSpecialist, user]);
 
   return (
-    <ChatCard>
+    <ChatContainer>
       <ChatHeader>
         <Typography variant="h6">
-          {selectedSpecialist
-            ? `Chatting with ${selectedSpecialist}`
-            : 'DoD Fitness Chat'}
+          {selectedSpecialist ? `Chatting with ${selectedSpecialist}` : 'DoD Fitness Chat'}
         </Typography>
         <IconButton onClick={onClose} size="small">
           <X />
         </IconButton>
       </ChatHeader>
-      <ChatContent ref={chatContentRef} onScroll={handleScroll}>
+
+      <ChatContent ref={chatContentRef}>
         {!selectedSpecialist ? (
           <Box>
             <Typography variant="body2" gutterBottom>
@@ -198,7 +189,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
                 fullWidth
                 variant="outlined"
                 onClick={() => handleSpecialistSelect(specialist)}
-                style={{ marginBottom: '8px' }}
+                sx={{ mb: 1 }}
               >
                 {specialist}
               </Button>
@@ -206,8 +197,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           </Box>
         ) : (
           <Box display="flex" flexDirection="column">
-            {messages.map((message, index) => (
-              <MessageBubble key={index} isUser={message.sender === 'User'}>
+            {messages.map((message) => (
+              <MessageBubble key={message.id} isUser={message.sender === 'User'}>
                 <Typography variant="body2">{message.text}</Typography>
               </MessageBubble>
             ))}
@@ -219,6 +210,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           </Box>
         )}
       </ChatContent>
+
       {selectedSpecialist && (
         <ChatInputArea>
           <TextField
@@ -229,6 +221,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             placeholder="Type a message..."
+            sx={{ mr: 1 }}
           />
           <IconButton
             color="primary"
@@ -239,17 +232,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
           </IconButton>
         </ChatInputArea>
       )}
-      {showScrollButton && (
-        <ScrollToBottomButton
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={scrollToBottom}
-        >
-          ↓
-        </ScrollToBottomButton>
-      )}
-    </ChatCard>
+    </ChatContainer>
   );
 };
 

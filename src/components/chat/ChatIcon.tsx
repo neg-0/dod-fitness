@@ -13,9 +13,10 @@ const ChatIcon: React.FC<ChatIconProps> = ({ onClick }) => {
       aria-label="chat"
       style={{
         position: 'fixed',
-        bottom: '110px', // Moved up to avoid overlapping with the footer
+        bottom: '20px',
         right: '20px',
         zIndex: 1000,
+        boxShadow: '0 0 10px 2px rgba(255, 255, 255, 0.3), 0 3px 5px -1px rgba(0,0,0,0.2), 0 6px 10px 0 rgba(0,0,0,0.14), 0 1px 18px 0 rgba(0,0,0,0.12)',
       }}
       onClick={onClick}
     >

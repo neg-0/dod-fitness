@@ -10,6 +10,7 @@ import Announcements from './Announcements';
 import UnitHealthMetrics from './UnitHealthMetrics';
 import TeamPerformance from './TeamPerformance';
 import SpecialistQueue from './SpecialistQueue';
+import WellnessCheckIn from './WellnessCheckIn';
 
 export const modules = {
   TodaysWorkout,
@@ -24,4 +25,5 @@ export const modules = {
   UnitHealthMetrics,
   TeamPerformance,
   SpecialistQueue,
+  WellnessCheckIn,
 };

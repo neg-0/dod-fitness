@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Card,
   CardContent,
   Typography,
-  Button,
-  Grid,
   IconButton,
+  Tooltip,
   Menu,
   MenuItem,
+  Box,
 } from '@mui/material';
 import {
   Weight,
@@ -15,7 +15,9 @@ import {
   FileText,
   Plus,
   Settings,
-  Trash2,
+  Activity,
+  Target,
+  Bell,
 } from 'lucide-react';
 import { DashboardModule } from '../moduleRegistry';
 import { UserRole, useAuth } from '../../../contexts/AuthContext';
@@ -25,56 +27,50 @@ interface Action {
   id: string;
   name: string;
   icon: React.ElementType;
+  tooltip: string;
 }
 
 const availableActions: { [key in UserRole]: Action[] } = {
   BaseMember: [
-    { id: 'logWeight', name: 'Log Weight', icon: Weight },
-    { id: 'scheduleWorkout', name: 'Schedule Workout', icon: Calendar },
-    { id: 'viewReports', name: 'View Reports', icon: FileText },
-    { id: 'addGoal', name: 'Add Goal', icon: Plus },
+    { id: 'logWeight', name: 'Log Weight', icon: Weight, tooltip: 'Record your daily weight' },
+    { id: 'scheduleWorkout', name: 'Schedule', icon: Calendar, tooltip: 'Plan your next workout' },
+    { id: 'viewReports', name: 'Reports', icon: FileText, tooltip: 'Check your progress reports' },
+    { id: 'trackActivity', name: 'Activity', icon: Activity, tooltip: 'Log your daily activities' },
+    { id: 'setGoals', name: 'Goals', icon: Target, tooltip: 'Update your fitness goals' },
   ],
   UnitLeadership: [
-    { id: 'viewReports', name: 'View Reports', icon: FileText },
-    { id: 'scheduleAssessment', name: 'Schedule Assessment', icon: Calendar },
-    { id: 'addAnnouncement', name: 'Add Announcement', icon: Plus },
+    { id: 'viewReports', name: 'Reports', icon: FileText, tooltip: 'Review unit reports' },
+    { id: 'scheduleAssessment', name: 'Schedule', icon: Calendar, tooltip: 'Plan fitness assessments' },
+    { id: 'addAnnouncement', name: 'Announce', icon: Bell, tooltip: 'Post new announcements' },
   ],
   FitnessSpecialist: [
-    { id: 'createWorkoutPlan', name: 'Create Workout Plan', icon: Plus },
-    {
-      id: 'scheduleConsultation',
-      name: 'Schedule Consultation',
-      icon: Calendar,
-    },
-    { id: 'viewMemberProgress', name: 'View Member Progress', icon: FileText },
+    { id: 'createWorkoutPlan', name: 'New Plan', icon: Plus, tooltip: 'Create a new workout plan' },
+    { id: 'scheduleConsultation', name: 'Schedule', icon: Calendar, tooltip: 'Schedule consultations' },
+    { id: 'viewMemberProgress', name: 'Progress', icon: Activity, tooltip: 'View member progress' },
   ],
   NutritionSpecialist: [
-    { id: 'createMealPlan', name: 'Create Meal Plan', icon: Plus },
-    {
-      id: 'scheduleConsultation',
-      name: 'Schedule Consultation',
-      icon: Calendar,
-    },
-    {
-      id: 'viewNutritionReports',
-      name: 'View Nutrition Reports',
-      icon: FileText,
-    },
+    { id: 'createMealPlan', name: 'New Plan', icon: Plus, tooltip: 'Create a new meal plan' },
+    { id: 'scheduleConsultation', name: 'Schedule', icon: Calendar, tooltip: 'Schedule consultations' },
+    { id: 'viewNutritionReports', name: 'Reports', icon: FileText, tooltip: 'View nutrition reports' },
   ],
   SystemAdministrator: [
-    { id: 'manageUsers', name: 'Manage Users', icon: Plus },
-    { id: 'systemSettings', name: 'System Settings', icon: Settings },
-    { id: 'viewLogs', name: 'View Logs', icon: FileText },
+    { id: 'manageUsers', name: 'Users', icon: Plus, tooltip: 'Manage system users' },
+    { id: 'systemSettings', name: 'Settings', icon: Settings, tooltip: 'Configure system settings' },
+    { id: 'viewLogs', name: 'Logs', icon: FileText, tooltip: 'View system logs' },
   ],
 };
 
-const QuickActions: DashboardModule<{ size?: 'small' | 'medium' | 'large' }> = ({
-  size = 'medium',
-}) => {
+const BUTTON_SIZE = 56; // Base button size in pixels
+const BUTTON_MARGIN = 16; // Margin between buttons
+const MIN_BUTTONS_PER_ROW = 2;
+
+const QuickActions: DashboardModule = () => {
   const { user } = useAuth();
   const { editMode } = useDashboard();
   const [actions, setActions] = useState<Action[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [buttonsPerRow, setButtonsPerRow] = useState(MIN_BUTTONS_PER_ROW);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (user) {
@@ -82,7 +78,7 @@ const QuickActions: DashboardModule<{ size?: 'small' | 'medium' | 'large' }> = (
       if (storedActions) {
         setActions(JSON.parse(storedActions));
       } else {
-        setActions(availableActions[user.role].slice(0, 4));
+        setActions(availableActions[user.role].slice(0, 3));
       }
     }
   }, [user]);
@@ -92,6 +88,27 @@ const QuickActions: DashboardModule<{ size?: 'small' | 'medium' | 'large' }> = (
       localStorage.setItem(`quickActions_${user.id}`, JSON.stringify(actions));
     }
   }, [actions, user]);
+
+  useEffect(() => {
+    const updateButtonsPerRow = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth;
+        const buttonWithMargin = BUTTON_SIZE + BUTTON_MARGIN * 2;
+        const maxButtons = Math.max(
+          MIN_BUTTONS_PER_ROW,
+          Math.floor(containerWidth / buttonWithMargin)
+        );
+        setButtonsPerRow(maxButtons);
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(updateButtonsPerRow);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, []);
 
   const handleAddAction = (action: Action) => {
     setActions((prevActions) => [...prevActions, action]);
@@ -112,88 +129,129 @@ const QuickActions: DashboardModule<{ size?: 'small' | 'medium' | 'large' }> = (
     setAnchorEl(null);
   };
 
-  const renderSmall = () => (
-    <Grid container spacing={1}>
-      {actions.slice(0, 2).map((action) => (
-        <Grid item xs={6} key={action.id}>
-          <Button
-            variant="outlined"
-            startIcon={<action.icon size={16} />}
-            fullWidth
+  const renderActionButton = (action: Action) => {
+    const IconComponent = action.icon;
+    return (
+      <Box
+        key={action.id}
+        sx={{
+          display: 'inline-flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          position: 'relative',
+          width: `${100 / buttonsPerRow}%`,
+          padding: 1,
+        }}
+      >
+        <Tooltip title={action.tooltip} arrow>
+          <IconButton
+            sx={{
+              width: BUTTON_SIZE,
+              height: BUTTON_SIZE,
+              backgroundColor: 'primary.main',
+              color: 'primary.contrastText',
+              '&:hover': {
+                backgroundColor: 'primary.dark',
+              },
+              mb: 1,
+            }}
+          >
+            <IconComponent size={24} />
+          </IconButton>
+        </Tooltip>
+        <Typography
+          variant="caption"
+          align="center"
+          sx={{
+            width: '100%',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {action.name}
+        </Typography>
+        {editMode && (
+          <IconButton
             size="small"
+            onClick={() => handleRemoveAction(action.id)}
+            sx={{
+              position: 'absolute',
+              top: -8,
+              right: '50%',
+              transform: 'translateX(28px)',
+              backgroundColor: 'error.main',
+              color: 'error.contrastText',
+              width: 20,
+              height: 20,
+              '&:hover': {
+                backgroundColor: 'error.dark',
+              },
+              zIndex: 1003,
+            }}
           >
-            {action.name}
-          </Button>
-        </Grid>
-      ))}
-    </Grid>
-  );
+            <Plus size={12} style={{ transform: 'rotate(45deg)' }} />
+          </IconButton>
+        )}
+      </Box>
+    );
+  };
 
-  const renderMedium = () => (
-    <Grid container spacing={1}>
-      {actions.map((action) => (
-        <Grid item xs={6} key={action.id}>
-          <Button
-            variant="outlined"
-            startIcon={<action.icon size={16} />}
-            fullWidth
-          >
-            {action.name}
-          </Button>
-          {editMode && (
-            <IconButton
-              size="small"
-              onClick={() => handleRemoveAction(action.id)}
-              sx={{ position: 'absolute', top: 0, right: 0 }}
-            >
-              <Trash2 size={16} />
-            </IconButton>
-          )}
-        </Grid>
-      ))}
-    </Grid>
-  );
-
-  const renderLarge = () => (
-    <>
-      <Typography variant="h6" gutterBottom>
-        Quick Actions
+  const renderGhostButton = () => (
+    <Box
+      sx={{
+        display: 'inline-flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: `${100 / buttonsPerRow}%`,
+        padding: 1,
+      }}
+    >
+      <Tooltip title="Add Quick Action" arrow>
+        <IconButton
+          onClick={handleOpenMenu}
+          sx={{
+            width: BUTTON_SIZE,
+            height: BUTTON_SIZE,
+            border: '2px dashed',
+            borderColor: 'primary.main',
+            color: 'primary.main',
+            '&:hover': {
+              backgroundColor: 'primary.main',
+              color: 'primary.contrastText',
+            },
+            mb: 1,
+            zIndex: 1003,
+          }}
+        >
+          <Plus size={24} />
+        </IconButton>
+      </Tooltip>
+      <Typography variant="caption" align="center">
+        Add Action
       </Typography>
-      <Grid container spacing={2}>
-        {actions.map((action) => (
-          <Grid item xs={6} key={action.id}>
-            <Button variant="contained" startIcon={<action.icon />} fullWidth>
-              {action.name}
-            </Button>
-            {editMode && (
-              <IconButton
-                size="small"
-                onClick={() => handleRemoveAction(action.id)}
-                sx={{ position: 'absolute', top: 0, right: 0 }}
-              >
-                <Trash2 size={16} />
-              </IconButton>
-            )}
-          </Grid>
-        ))}
-      </Grid>
-    </>
+    </Box>
   );
 
   return (
-    <Card sx={{ height: '100%', position: 'relative' }}>
+    <Card sx={{ height: '100%' }}>
       <CardContent>
-        {size === 'small' && renderSmall()}
-        {size === 'medium' && renderMedium()}
-        {size === 'large' && renderLarge()}
-        {editMode && (
-          <IconButton
-            onClick={handleOpenMenu}
-            sx={{ position: 'absolute', top: 8, right: 8 }}
-          >
-            <Settings size={24} />
-          </IconButton>
-        )}
+        <Typography variant="h6" gutterBottom>
+          Quick Actions
+        </Typography>
+        <Box
+          ref={containerRef}
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            mt: 1,
+          }}
+        >
+          {actions.map((action) => renderActionButton(action))}
+          {actions.length < 8 && renderGhostButton()}
+        </Box>
       </CardContent>
       <Menu
         anchorEl={anchorEl}
@@ -204,8 +262,12 @@ const QuickActions: DashboardModule<{ size?: 'small' | 'medium' | 'large' }> = (
           availableActions[user.role]
             .filter((action) => !actions.some((a) => a.id === action.id))
             .map((action) => (
-              <MenuItem key={action.id} onClick={() => handleAddAction(action)}>
-                <action.icon size={16} style={{ marginRight: 8 }} />
+              <MenuItem
+                key={action.id}
+                onClick={() => handleAddAction(action)}
+                sx={{ gap: 1 }}
+              >
+                <action.icon size={16} />
                 {action.name}
               </MenuItem>
             ))}
@@ -217,9 +279,9 @@ const QuickActions: DashboardModule<{ size?: 'small' | 'medium' | 'large' }> = (
 QuickActions.moduleMetadata = {
   id: 'quickActions',
   title: 'Quick Actions',
-  description: 'Perform common actions quickly',
-  icon: Calendar,
-  defaultLayout: { w: 2, h: 1, minW: 1, minH: 1 },
+  description: 'Access frequently used actions',
+  icon: Activity,
+  defaultLayout: { w: 2, h: 2, minW: 1, minH: 1 },
   roles: [
     'BaseMember',
     'UnitLeadership',

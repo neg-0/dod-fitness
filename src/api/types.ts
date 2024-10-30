@@ -1,7 +1,7 @@
 export type AxiosResponse<T = any> = import('axios').AxiosResponse<T>;
 
 export type LoginRequest = {
-  username: string;
+  email: string;
   password: string;
 };
 
@@ -17,7 +17,13 @@ export type Profile = {
   age: number;
   height: number;
   weight: number;
-  branch: 'Army' | 'Navy' | 'Air Force' | 'Marines' | 'Coast Guard' | 'Space Force';
+  branch:
+    | 'Army'
+    | 'Navy'
+    | 'Air Force'
+    | 'Marines'
+    | 'Coast Guard'
+    | 'Space Force';
   currentInstallation?: string;
   fitnessWaivers: string;
   dietaryRestrictions: string;
