@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
     <Box component="footer" sx={{ bgcolor: theme.palette.primary.main, py: 3 }}>
       <Container maxWidth="lg">
         <Typography variant="body2" align="center" sx={{ color: theme.palette.primary.contrastText }}>
-          © {new Date().getFullYear()} DoD Fitness App. All rights reserved.
+          © {new Date().getFullYear()} Atlas. All rights reserved.
         </Typography>
         <Typography variant="body2" align="center" sx={{ color: theme.palette.primary.contrastText }}>
           <Link color="inherit" href="#">

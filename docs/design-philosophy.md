@@ -1,6 +1,6 @@
-# DoD Fitness App - Design Philosophy
+# Atlas - Design Philosophy
 
-The DoD Fitness App's design philosophy is centered around creating a user-friendly, efficient, and motivating experience for military personnel. Our design decisions are guided by the following principles:
+Atlas's design philosophy is centered around creating a user-friendly, efficient, and motivating experience for military personnel. Our design decisions are guided by the following principles:
 
 ## 1. Military Precision and Professionalism
 
@@ -70,4 +70,4 @@ The DoD Fitness App's design philosophy is centered around creating a user-frien
 6. **Microinteractions**:
    - Subtle animations for state changes and user actions to enhance the feeling of responsiveness
 
-By adhering to these design principles and elements, the DoD Fitness App aims to provide a user experience that is not only functional and efficient but also motivating and aligned with the values and needs of military personnel.
+By adhering to these design principles and elements, Atlas aims to provide a user experience that is not only functional and efficient but also motivating and aligned with the values and needs of military personnel.

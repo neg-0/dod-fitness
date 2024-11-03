@@ -1,8 +1,8 @@
-# DoD Fitness App - Technical Specifications
+# Atlas - Technical Specifications
 
 ## Architecture Overview
 
-The DoD Fitness App is built as a single-page application (SPA) using React for the frontend. The backend is simulated for this project but is designed to be easily replaced with a real backend implementation.
+Atlas is built as a single-page application (SPA) using React for the frontend. The backend is simulated for this project but is designed to be easily replaced with a real backend implementation.
 
 ```mermaid
 graph TD
@@ -190,4 +190,4 @@ The application is designed to be responsive and work well on various device siz
 
 The application is designed to be easily deployable to various hosting platforms. For this project, we're using Netlify for continuous deployment.
 
-By adhering to these technical specifications, the DoD Fitness App aims to provide a robust, performant, and maintainable solution for military fitness tracking and planning.
+By adhering to these technical specifications, Atlas aims to provide a robust, performant, and maintainable solution for military fitness tracking and planning.

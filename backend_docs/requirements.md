@@ -1,4 +1,4 @@
-# DoD Fitness App Backend Service - Requirements
+# Atlas Backend Service - Requirements
 
 ## Functional Requirements
 
@@ -80,4 +80,4 @@
     - Support multiple languages (initially English, with capability to add more)
     - Handle different time zones for deployed personnel
 
-These requirements provide a comprehensive foundation for developing a robust, secure, and scalable backend service for the DoD Fitness App. They should be reviewed and updated regularly as the project evolves.
+These requirements provide a comprehensive foundation for developing a robust, secure, and scalable backend service for Atlas. They should be reviewed and updated regularly as the project evolves.

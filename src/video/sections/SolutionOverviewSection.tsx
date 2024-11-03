@@ -49,7 +49,7 @@ export const SolutionOverviewSection: React.FC = () => {
       opacity,
       padding: 40,
     }}>
-      <h2 style={{ fontSize: 48, marginBottom: 40 }}>DoD Fitness App Solution</h2>
+      <h2 style={{ fontSize: 48, marginBottom: 40 }}>Atlas Solution</h2>
       {features.map((feature, index) => (
         <Feature
           key={index}

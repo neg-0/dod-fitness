@@ -1,4 +1,4 @@
-# DoD Fitness App Backend Service - Enhanced Technical Specifications
+# Atlas Backend Service - Enhanced Technical Specifications
 
 ## Programming Language and Framework
 
@@ -179,4 +179,4 @@
 - MLflow for model versioning and deployment
 - Batch processing jobs for periodic model retraining
 
-These enhanced technical specifications provide a comprehensive foundation for building a robust, scalable, and feature-rich backend service for the DoD Fitness App. The chosen technologies and tools are industry-standard and well-suited for developing secure and high-performance applications with advanced AI and ML capabilities. As the project evolves, these specifications may be reviewed and updated to meet changing requirements or to incorporate new technologies.
+These enhanced technical specifications provide a comprehensive foundation for building a robust, scalable, and feature-rich backend service for Atlas. The chosen technologies and tools are industry-standard and well-suited for developing secure and high-performance applications with advanced AI and ML capabilities. As the project evolves, these specifications may be reviewed and updated to meet changing requirements or to incorporate new technologies.

@@ -17,7 +17,7 @@ const Home: React.FC = () => {
   return (
     <div className="text-center">
       <Typography variant="h2" component="h1" gutterBottom>
-        Welcome to DoD Fitness
+        Welcome to Atlas
       </Typography>
       <Typography variant="h5" component="h2" gutterBottom>
         Your personalized fitness and nutrition companion

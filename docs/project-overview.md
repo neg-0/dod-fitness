@@ -1,8 +1,8 @@
-# DoD Fitness App - Project Overview
+# Atlas - Project Overview
 
 ## Introduction
 
-The DoD Fitness App is a comprehensive web application designed to support the fitness and nutrition needs of Department of Defense personnel. This app aims to help military members maintain peak physical condition, adhere to branch-specific fitness standards, and promote overall health and wellness.
+Atlas is a comprehensive web application designed to support the fitness and nutrition needs of Department of Defense personnel. This app aims to help military members maintain peak physical condition, adhere to branch-specific fitness standards, and promote overall health and wellness.
 
 ## Goals
 
@@ -100,4 +100,4 @@ The DoD Fitness App is a comprehensive web application designed to support the f
 - Virtual coaching and AI-driven workout adjustments
 - Expanded library of exercise demonstrations and technique guides
 
-By focusing on these goals, features, and enhancements, the DoD Fitness App aims to become an essential tool for maintaining and improving the fitness of military personnel across all branches of service.
+By focusing on these goals, features, and enhancements, Atlas aims to become an essential tool for maintaining and improving the fitness of military personnel across all branches of service.

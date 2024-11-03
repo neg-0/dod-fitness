@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
-  title: DoD Fitness App API
+  title: Atlas API
   version: 1.0.0
-  description: API specification for the DoD Fitness App backend services
+  description: API specification for Atlas backend services
 
 servers:
   - url: https://api.dodfitness.mil/v1

@@ -46,7 +46,7 @@ export const IntroSection: React.FC = () => {
           marginBottom: 20,
         }}
       >
-        DoD Fitness App
+        Atlas
       </h1>
       <p
         style={{

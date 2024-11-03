@@ -1,6 +1,6 @@
-# DoD Fitness App Backend Service - Deployment
+# Atlas Backend Service - Deployment
 
-This document outlines the deployment strategy and environment setup for the DoD Fitness App Backend Service. The deployment process is designed to ensure reliability, scalability, and security while facilitating continuous integration and delivery.
+This document outlines the deployment strategy and environment setup for Atlas Backend Service. The deployment process is designed to ensure reliability, scalability, and security while facilitating continuous integration and delivery.
 
 ## Deployment Strategy
 
@@ -121,4 +121,4 @@ In case of deployment issues:
 - Provide training for the operations team on the deployment process and troubleshooting
 - Conduct regular drills for handling deployment issues and performing rollbacks
 
-This deployment strategy aims to provide a robust, secure, and scalable infrastructure for the DoD Fitness App Backend Service. Regular reviews and updates to this strategy should be conducted to incorporate new best practices and technologies as they emerge.
+This deployment strategy aims to provide a robust, secure, and scalable infrastructure for Atlas Backend Service. Regular reviews and updates to this strategy should be conducted to incorporate new best practices and technologies as they emerge.

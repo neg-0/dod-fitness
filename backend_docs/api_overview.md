@@ -1,8 +1,8 @@
-# DoD Fitness App Backend Service - API Overview
+# Atlas Backend Service - API Overview
 
 ## Introduction
 
-The DoD Fitness App Backend Service exposes a RESTful API that serves as the primary interface between the frontend application and the backend services. This document provides an overview of the API structure, design principles, and key considerations.
+Atlas Backend Service exposes a RESTful API that serves as the primary interface between the frontend application and the backend services. This document provides an overview of the API structure, design principles, and key considerations.
 
 ## API Design Principles
 
@@ -110,4 +110,4 @@ These specifications provide detailed information about:
 
 ## Conclusion
 
-This API overview provides a high-level understanding of the DoD Fitness App Backend Service API. For detailed endpoint specifications, request/response schemas, and examples, refer to the OpenAPI files in the `api_specs` directory. The API is designed to be secure, efficient, and scalable, providing a robust foundation for the DoD Fitness App ecosystem.
+This API overview provides a high-level understanding of Atlas Backend Service API. For detailed endpoint specifications, request/response schemas, and examples, refer to the OpenAPI files in the `api_specs` directory. The API is designed to be secure, efficient, and scalable, providing a robust foundation for Atlas ecosystem.

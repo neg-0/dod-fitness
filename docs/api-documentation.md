@@ -1,6 +1,6 @@
-# DoD Fitness App - API Documentation
+# Atlas - API Documentation
 
-This document outlines the API endpoints used by the DoD Fitness App. Note that in the current implementation, these endpoints are simulated using mock data. However, this documentation serves as a blueprint for future backend implementation.
+This document outlines the API endpoints used by Atlas. Note that in the current implementation, these endpoints are simulated using mock data. However, this documentation serves as a blueprint for future backend implementation.
 
 ## Base URL
 

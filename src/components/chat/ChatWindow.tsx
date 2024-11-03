@@ -170,7 +170,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({
     <ChatContainer>
       <ChatHeader>
         <Typography variant="h6">
-          {selectedSpecialist ? `Chatting with ${selectedSpecialist}` : 'DoD Fitness Chat'}
+          {selectedSpecialist ? `Chatting with ${selectedSpecialist}` : 'Atlas Chat'}
         </Typography>
         <IconButton onClick={onClose} size="small">
           <X />

@@ -1,12 +1,12 @@
-# DoD Fitness App Backend Service - Data Model
+# Atlas Backend Service - Data Model
 
-This document outlines the core data entities and their relationships for the DoD Fitness App Backend Service. The data model is designed to support the app's key features while maintaining flexibility for future enhancements and aligning with our OpenAPI specifications.
+This document outlines the core data entities and their relationships for Atlas Backend Service. The data model is designed to support the app's key features while maintaining flexibility for future enhancements and aligning with our OpenAPI specifications.
 
 ## Core Entities
 
 ### 1. User
 
-Represents a user of the DoD Fitness App.
+Represents a user of Atlas.
 
 - id: UUID (Primary Key)
 - email: String (Unique)
@@ -176,4 +176,4 @@ For enhanced tracking and compliance:
 - Use the `createdAt` and `updatedAt` fields to track when entities are created and modified
 - Consider implementing an audit log table to track significant changes to critical data
 
-This data model provides a solid foundation for the DoD Fitness App Backend Service. It captures the essential entities and relationships required to support the app's core functionalities while aligning with our OpenAPI specifications and database schema. This model allows for future expansion and refinement as needed.
+This data model provides a solid foundation for Atlas Backend Service. It captures the essential entities and relationships required to support the app's core functionalities while aligning with our OpenAPI specifications and database schema. This model allows for future expansion and refinement as needed.

@@ -1,6 +1,6 @@
-# DoD Fitness App Backend Service - Security
+# Atlas Backend Service - Security
 
-Security is a critical aspect of the DoD Fitness App Backend Service, given the sensitive nature of the data and the military context. This document outlines key security considerations and implementation guidelines.
+Security is a critical aspect of Atlas Backend Service, given the sensitive nature of the data and the military context. This document outlines key security considerations and implementation guidelines.
 
 ## Authentication and Authorization
 
@@ -125,4 +125,4 @@ Security is a critical aspect of the DoD Fitness App Backend Service, given the 
 
 ## Conclusion
 
-Implementing these security measures will help ensure that the DoD Fitness App Backend Service meets high security standards. Regular security assessments and updates to this security strategy are crucial to maintaining a strong security posture in the face of evolving threats.
+Implementing these security measures will help ensure that Atlas Backend Service meets high security standards. Regular security assessments and updates to this security strategy are crucial to maintaining a strong security posture in the face of evolving threats.

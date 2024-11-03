@@ -45,7 +45,7 @@ export const CallToActionSection: React.FC = () => {
           extrapolateRight: 'clamp',
         }),
       }}>
-        Select the DoD Fitness App for development and implementation to revolutionize military fitness for the 21st century and beyond.
+        Select Atlas for development and implementation to revolutionize military fitness for the 21st century and beyond.
       </p>
     </div>
   );

@@ -1,6 +1,6 @@
-# DoD Fitness App - Installation Guide
+# Atlas - Installation Guide
 
-This guide will walk you through the process of setting up the DoD Fitness App development environment on your local machine.
+This guide will walk you through the process of setting up Atlas development environment on your local machine.
 
 ## Prerequisites
 
@@ -52,7 +52,7 @@ npm run dev
 
 2. Open your web browser and navigate to `http://localhost:5173` (or the URL provided in the terminal output).
 
-You should now see the DoD Fitness App running in your browser.
+You should now see Atlas running in your browser.
 
 ## Step 5: Building for Production
 

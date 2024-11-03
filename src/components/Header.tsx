@@ -105,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
               },
             }}
           >
-            DoD Fitness
+            Atlas
           </Typography>
           {isMobile ? (
             <IconButton

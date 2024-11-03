@@ -1,6 +1,6 @@
-# DoD Fitness App Backend Service - Testing Strategy
+# Atlas Backend Service - Testing Strategy
 
-This document outlines the comprehensive testing strategy for the DoD Fitness App Backend Service. The goal is to ensure high quality, reliability, and security of the backend service through various testing methodologies.
+This document outlines the comprehensive testing strategy for Atlas Backend Service. The goal is to ensure high quality, reliability, and security of the backend service through various testing methodologies.
 
 ## Types of Testing
 
@@ -138,4 +138,4 @@ This document outlines the comprehensive testing strategy for the DoD Fitness Ap
 - Provide training on testing methodologies and tools
 - Encourage sharing of testing knowledge within the team
 
-By following this comprehensive testing strategy, we aim to ensure the reliability, performance, and security of the DoD Fitness App Backend Service. Regular reviews and updates to this strategy should be conducted to incorporate new testing methodologies and tools as they become available.
+By following this comprehensive testing strategy, we aim to ensure the reliability, performance, and security of Atlas Backend Service. Regular reviews and updates to this strategy should be conducted to incorporate new testing methodologies and tools as they become available.

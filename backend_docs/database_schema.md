@@ -1,6 +1,6 @@
-# DoD Fitness App Backend Service - Database Schema
+# Atlas Backend Service - Database Schema
 
-This document outlines the database schema for the DoD Fitness App Backend Service. The schema is designed to support the app's key features and align with the OpenAPI specifications.
+This document outlines the database schema for Atlas Backend Service. The schema is designed to support the app's key features and align with the OpenAPI specifications.
 
 ## Tables
 

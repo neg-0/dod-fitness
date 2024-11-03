@@ -130,7 +130,7 @@ const Login: React.FC = () => {
             gutterBottom
             className="text-center"
           >
-            DoD Fitness App Login
+            Atlas Login
           </Typography>
 
           {error && (
@@ -266,7 +266,7 @@ const Login: React.FC = () => {
           }}
         >
           <Typography variant="h6" component="h2" gutterBottom>
-            Register for DoD Fitness App
+            Register for Atlas
           </Typography>
           <TextField
             fullWidth

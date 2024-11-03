@@ -1,4 +1,4 @@
-# DoD Fitness App Video Assets
+# Atlas Video Assets
 
 ## Images
 

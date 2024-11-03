@@ -1,7 +1,7 @@
-# DoD Fitness App Video Pitch Scene Breakdown
+# Atlas Video Pitch Scene Breakdown
 
 ## 1. Introduction (30 seconds)
-- Opening shot: Sleek 3D animation of DoD Fitness App logo forming from particles
+- Opening shot: Sleek 3D animation of Atlas logo forming from particles
 - Quick montage of stylized service members using holographic app interfaces
 - Transition: Logo dissolves into a globe showing military bases worldwide
 
@@ -39,7 +39,7 @@
 
 ## 6. Call to Action (15-30 seconds)
 - Inspiring montage: Quick cuts of diverse service members benefiting from the app
-- Final shot: Space Force and DoD Fitness App logos merging in a burst of energy
+- Final shot: Space Force and Atlas logos merging in a burst of energy
 - Closing animation: Call-to-action text forming from stars in a space backdrop
 
 Transitions: Use sleek, tech-inspired transitions between scenes, such as data stream effects, holographic dissolves, and particle transformations to maintain a cohesive, futuristic feel throughout the video.

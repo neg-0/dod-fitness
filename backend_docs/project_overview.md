@@ -1,8 +1,8 @@
-# DoD Fitness App Backend Service - Enhanced Project Overview
+# Atlas Backend Service - Enhanced Project Overview
 
 ## Introduction
 
-The DoD Fitness App Backend Service is a crucial component of the DoD Fitness App ecosystem. It serves as the central hub for data processing, storage, and retrieval, supporting the frontend application in delivering a comprehensive fitness and nutrition tracking experience for Department of Defense personnel.
+Atlas Backend Service is a crucial component of Atlas ecosystem. It serves as the central hub for data processing, storage, and retrieval, supporting the frontend application in delivering a comprehensive fitness and nutrition tracking experience for Department of Defense personnel.
 
 ## Purpose
 
@@ -84,4 +84,4 @@ The backend service fits into the overall system architecture as follows:
 
 ## Conclusion
 
-The enhanced DoD Fitness App Backend Service provides a comprehensive, secure, and scalable foundation for managing user data and delivering personalized fitness and nutrition guidance. Its robust architecture and advanced features ensure that it meets the unique needs of military personnel while maintaining the highest levels of data security and performance. The integration of AI, machine learning, and external data sources creates a holistic wellness platform that adapts to each user's needs and preferences.
+The enhanced Atlas Backend Service provides a comprehensive, secure, and scalable foundation for managing user data and delivering personalized fitness and nutrition guidance. Its robust architecture and advanced features ensure that it meets the unique needs of military personnel while maintaining the highest levels of data security and performance. The integration of AI, machine learning, and external data sources creates a holistic wellness platform that adapts to each user's needs and preferences.

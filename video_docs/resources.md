@@ -1,7 +1,7 @@
-# DoD Fitness App Video Pitch Resources
+# Atlas Video Pitch Resources
 
 ## Visual Elements
-1. DoD Fitness App logo (design needed)
+1. Atlas logo (design needed)
 2. Space Force logo
 3. Other military branch logos (Army, Navy, Air Force, Marines)
 4. Stock footage or animations:

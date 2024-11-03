@@ -1,6 +1,6 @@
-# DoD Fitness App Backend Service - Performance Considerations
+# Atlas Backend Service - Performance Considerations
 
-This document outlines the performance requirements and optimization strategies for the DoD Fitness App Backend Service. Ensuring high performance is crucial for providing a smooth user experience and handling a large number of concurrent users.
+This document outlines the performance requirements and optimization strategies for Atlas Backend Service. Ensuring high performance is crucial for providing a smooth user experience and handling a large number of concurrent users.
 
 ## Performance Requirements
 
@@ -138,4 +138,4 @@ This document outlines the performance requirements and optimization strategies 
 - Stay informed about new performance optimization techniques and tools
 - Conduct performance audits as part of the regular development cycle
 
-By implementing these performance considerations and optimization strategies, the DoD Fitness App Backend Service can ensure high performance, scalability, and a smooth user experience. Regular performance testing and optimization should be an ongoing process to maintain and improve the system's performance over time.
+By implementing these performance considerations and optimization strategies, Atlas Backend Service can ensure high performance, scalability, and a smooth user experience. Regular performance testing and optimization should be an ongoing process to maintain and improve the system's performance over time.

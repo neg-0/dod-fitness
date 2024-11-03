@@ -1,7 +1,7 @@
-# DoD Fitness App Video Pitch Overview
+# Atlas Video Pitch Overview
 
 ## Purpose
-This video pitch presents the DoD Fitness App for a US Space Force generative AI contest, showcasing an innovative AI-driven solution addressing unique fitness and nutrition challenges faced by service members.
+This video pitch presents Atlas for a US Space Force generative AI contest, showcasing an innovative AI-driven solution addressing unique fitness and nutrition challenges faced by service members.
 
 ## Duration
 3-5 minutes (5 minutes maximum)

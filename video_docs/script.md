@@ -1,8 +1,8 @@
-# DoD Fitness App Video Pitch Script
+# Atlas Video Pitch Script
 
 ## Introduction (30 seconds)
-[DoD Fitness App logo animation]
-Narrator: "In the era of space-age technology, military fitness demands an equally advanced solution. Introducing the DoD Fitness App – a revolutionary AI-powered platform designed for the unique needs of our service members."
+[Atlas logo animation]
+Narrator: "In the era of space-age technology, military fitness demands an equally advanced solution. Introducing Atlas – a revolutionary AI-powered platform designed for the unique needs of our service members."
 
 [Montage of stylized service members using the app]
 Narrator: "From Space Force to every branch of the military, this app is poised to transform how we approach fitness and nutrition in the modern armed forces."
@@ -22,7 +22,7 @@ Narrator: "These 21st-century constraints call for a solution as adaptable and r
 
 ## Solution Overview (60-90 seconds)
 [3D app interface walkthrough]
-Narrator: "The DoD Fitness App leverages cutting-edge AI to address each of these challenges head-on."
+Narrator: "Atlas leverages cutting-edge AI to address each of these challenges head-on."
 
 [Feature highlights with animations]
 - "AI-driven scheduling adapts to even the most unpredictable duty rotations."
@@ -42,18 +42,18 @@ Narrator: "With military-grade security protocols, it integrates seamlessly and 
 [Animated 3D charts and infographics]
 Narrator: "The impact is clear and quantifiable. Early adoption has shown marked improvements in physical readiness scores, nutritional optimization, and overall health metrics across all branches."
 
-"Beyond individual benefits, the DoD Fitness App enhances unit readiness, potentially reducing injury rates and associated costs. By streamlining fitness management, we project significant time and resource savings military-wide."
+"Beyond individual benefits, Atlas enhances unit readiness, potentially reducing injury rates and associated costs. By streamlining fitness management, we project significant time and resource savings military-wide."
 
 ## Future Vision and Scalability (30 seconds)
 [Holographic global map animation]
 Narrator: "Our vision extends beyond today's capabilities. This app is engineered for scalability across the entire Department of Defense and beyond."
 
 [Customization demo for different branches]
-Narrator: "With effortless customization for each branch's specific needs, the DoD Fitness App is set to become the unified platform for military health and fitness in the space age."
+Narrator: "With effortless customization for each branch's specific needs, Atlas is set to become the unified platform for military health and fitness in the space age."
 
 ## Call to Action (15-30 seconds)
 [Montage of service members benefiting from the app]
-Narrator: "The DoD Fitness App represents the future of military health and readiness. It's not just an app; it's a force multiplier for the space era."
+Narrator: "Atlas represents the future of military health and readiness. It's not just an app; it's a force multiplier for the space era."
 
-[Space Force and DoD Fitness App logos merging]
+[Space Force and Atlas logos merging]
 Narrator: "By selecting this innovative solution for further development and implementation, Space Force will spearhead the revolution in military fitness for the 21st century and beyond. The future of force readiness is here – let's launch it together."

@@ -1,6 +1,6 @@
-# DoD Fitness App - Contribution Guidelines
+# Atlas - Contribution Guidelines
 
-We welcome contributions to the DoD Fitness App! This document outlines the process for contributing to the project and our expectations for contributors.
+We welcome contributions to Atlas! This document outlines the process for contributing to the project and our expectations for contributors.
 
 ## Table of Contents
 
@@ -95,4 +95,4 @@ This project and everyone participating in it is governed by our [Code of Conduc
 - Participate in code reviews to learn and share knowledge.
 - Help answer questions from other contributors and users.
 
-Thank you for contributing to the DoD Fitness App! Your efforts help improve the fitness and readiness of our military personnel.
+Thank you for contributing to Atlas! Your efforts help improve the fitness and readiness of our military personnel.

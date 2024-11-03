@@ -57,7 +57,7 @@ export const IntroductionSection: React.FC = () => {
         marginTop: 40,
         fontFamily: 'SpaceForce-Bold',
       }}>
-        DoD Fitness App
+        Atlas
       </h1>
       <p style={{
         fontSize: 32,

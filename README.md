@@ -1,10 +1,10 @@
-# DoD Fitness App
+# Atlas
 
-Welcome to the DoD Fitness App, a comprehensive fitness and nutrition tracking application designed specifically for Department of Defense personnel.
+Welcome to Atlas, a comprehensive fitness and nutrition tracking application designed specifically for Department of Defense personnel.
 
 ## API Switching Feature
 
-The DoD Fitness App supports switching between a mock API and a live backend API. This feature allows for easy development and testing without relying on a live backend.
+Atlas supports switching between a mock API and a live backend API. This feature allows for easy development and testing without relying on a live backend.
 
 ### Configuration
 
