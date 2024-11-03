@@ -74,10 +74,55 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
 
     return (
       <div className="grid grid-cols-7 gap-2">
-        {daysInWeek.map((day) => renderDayCard(day, true))}
+        {daysInWeek.map((day) => {
+          const workout = workoutPlan?.weeklyPlan.find((w) =>
+            isSameDay(new Date(w.day), day)
+          );
+
+          return (
+            <Card key={day.toISOString()} className="p-2">
+              <Typography variant="body2" className="text-center">
+                {format(day, 'EEEE')}
+              </Typography>
+              {workout ? (
+                <div className="flex flex-col items-center">
+                  <img
+                    src={getWorkoutImage(workout.workoutType)}
+                    alt={workout.workoutType}
+                    className="w-full h-24 object-cover"
+                  />
+                  <Typography variant="caption" className="mt-1">
+                    {workout.summary}
+                  </Typography>
+                </div>
+              ) : (
+                <Typography variant="caption" className="text-center">
+                  No workout
+                </Typography>
+              )}
+            </Card>
+          );
+        })}
       </div>
     );
   };
+
+  const getWorkoutImage = (workoutType: string) => {
+    const images = {
+      cardio: '/images/cardio.png',
+      strength: '/images/strength.png',
+      yoga: '/images/yoga.png',
+      hiit: '/images/hiit.png',
+      rest: '/images/rest.png',
+    };
+    return images[workoutType] || '/images/default.png';
+  };
+
+  const renderEmptyView = () => (
+    <div className="text-center">
+      <Typography variant="h6">No workouts scheduled</Typography>
+    </div>
+  );
 
   const renderDayCard = (day: Date, isWeekView: boolean = false) => {
     const workout = workoutPlan.weeklyPlan.find((w) =>
@@ -192,7 +237,11 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
             </ToggleButton>
           </ToggleButtonGroup>
         </div>
-        {view === 'month' ? renderMonthView() : renderWeekView()}
+        {workoutPlan ? (
+          view === 'month' ? renderMonthView() : renderWeekView()
+        ) : (
+          renderEmptyView()
+        )}
       </CardContent>
       <Modal
         open={!!selectedDay}

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Stepper,
-  Step,
-  StepLabel,
   Button,
   Typography,
   TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
+  Card,
+  CardContent,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
 } from '@mui/material';
 
 interface WorkoutWizardProps {
@@ -21,132 +20,98 @@ const WorkoutWizard: React.FC<WorkoutWizardProps> = ({
   onComplete,
   onCancel,
 }) => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [branch, setBranch] = useState('');
-  const [goal, setGoal] = useState('');
-  const [targetDate, setTargetDate] = useState('');
+  const [messages, setMessages] = useState<{ user: string; bot: string }[]>([]);
+  const [userInput, setUserInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [workoutPlan, setWorkoutPlan] = useState<any>(null);
 
-  const steps = [
-    'Select Military Branch',
-    'Choose Fitness Goal',
-    'Set Target Date',
-  ];
+  const handleSendMessage = async () => {
+    if (!userInput) return;
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    // Add user message to chat
+    setMessages((prev) => [...prev, { user: userInput, bot: '' }]);
+    setUserInput('');
+    setLoading(true);
+
+    // Simulate LLM response (replace with actual API call)
+    const botResponse = await simulateLLMResponse(userInput);
+    
+    // Add bot response to chat
+    setMessages((prev) => {
+      const updatedMessages = [...prev];
+      updatedMessages[updatedMessages.length - 1].bot = botResponse;
+      return updatedMessages;
+    });
+
+    // Update workout plan based on bot response
+    updateWorkoutPlan(botResponse);
+    setLoading(false);
   };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleComplete = () => {
-    onComplete({
-      branch,
-      goal,
-      targetDate,
-      duration: calculateDuration(targetDate),
+  const simulateLLMResponse = async (input: string) => {
+    // Simulate a delay for the LLM response
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(`Received your input: "${input}". Let's create your workout plan!`);
+      }, 1000);
     });
   };
 
-  const calculateDuration = (date: string) => {
-    const target = new Date(date);
-    const today = new Date();
-    const diffTime = Math.abs(target.getTime() - today.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
-
-  const getStepContent = (step: number) => {
-    switch (step) {
-      case 0:
-        return (
-          <FormControl fullWidth>
-            <InputLabel>Military Branch</InputLabel>
-            <Select
-              value={branch}
-              onChange={(e) => setBranch(e.target.value as string)}
-            >
-              <MenuItem value="Army">Army</MenuItem>
-              <MenuItem value="Navy">Navy</MenuItem>
-              <MenuItem value="Air Force">Air Force</MenuItem>
-              <MenuItem value="Space Force">Space Force</MenuItem>
-              <MenuItem value="Marines">Marines</MenuItem>
-              <MenuItem value="Coast Guard">Coast Guard</MenuItem>
-            </Select>
-          </FormControl>
-        );
-      case 1:
-        return (
-          <TextField
-            fullWidth
-            label="Fitness Goal"
-            value={goal}
-            onChange={(e) => setGoal(e.target.value)}
-            placeholder="e.g., Score 90+ on Air Force PT test"
-          />
-        );
-      case 2:
-        return (
-          <TextField
-            fullWidth
-            label="Target Date"
-            type="date"
-            value={targetDate}
-            onChange={(e) => setTargetDate(e.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-        );
-      default:
-        return 'Unknown step';
-    }
+  const updateWorkoutPlan = (response: string) => {
+    // Logic to update the workout plan based on the response
+    // This is where you would parse the response and update the state
+    setWorkoutPlan((prev) => ({
+      ...prev,
+      details: response, // Example of adding response to the plan
+    }));
   };
 
   return (
-    <div>
-      <Stepper activeStep={activeStep}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <div className="mt-4">
-        {activeStep === steps.length ? (
-          <div>
-            <Typography variant="body1">
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Button onClick={handleComplete} className="mt-2">
-              Create Workout Plan
-            </Button>
-          </div>
-        ) : (
-          <div>
-            <Typography component="div" variant="body1">
-              {getStepContent(activeStep)}
-            </Typography>
-            <div className="mt-4">
-              <Button disabled={activeStep === 0} onClick={handleBack}>
-                Back
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={
-                  activeStep === steps.length - 1 ? handleComplete : handleNext
-                }
-              >
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
-              <Button onClick={onCancel}>Cancel</Button>
-            </div>
-          </div>
+    <Card>
+      <CardContent>
+        <Typography variant="h5" gutterBottom>
+          Let's Create Your Workout Plan!
+        </Typography>
+        <Box mb={2}>
+          <List>
+            {messages.map((msg, index) => (
+              <ListItem key={index}>
+                <ListItemText
+                  primary={`User: ${msg.user}`}
+                  secondary={`Bot: ${msg.bot}`}
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+        <TextField
+          fullWidth
+          label="Type your message..."
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleSendMessage();
+            }
+          }}
+        />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSendMessage}
+          disabled={loading}
+          sx={{ mt: 2 }}
+        >
+          {loading ? 'Sending...' : 'Send'}
+        </Button>
+        {workoutPlan && (
+          <Box mt={4}>
+            <Typography variant="h6">Your Workout Plan:</Typography>
+            <Typography variant="body1">{workoutPlan.details}</Typography>
+          </Box>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

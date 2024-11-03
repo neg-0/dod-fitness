@@ -46,7 +46,7 @@ const WorkoutPlan: React.FC = () => {
       <Typography variant="h4" component="h2" gutterBottom>
         Your Personalized Workout Plan
       </Typography>
-      {!workoutPlan && !showWizard && (
+      {!showWizard && (
         <Card className="mb-4">
           <CardContent>
             <Typography variant="body1" paragraph>
@@ -69,7 +69,7 @@ const WorkoutPlan: React.FC = () => {
           onCancel={() => setShowWizard(false)}
         />
       )}
-      {workoutPlan && (
+      
         <>
           <WorkoutDashboard workoutPlan={workoutPlan} />
           <WorkoutCalendar
@@ -77,7 +77,7 @@ const WorkoutPlan: React.FC = () => {
             onUpdateWorkoutPlan={handleUpdateWorkoutPlan}
           />
         </>
-      )}
+      
     </div>
   );
 };
