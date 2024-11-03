@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Card, CardContent, Grid, CircularProgress } from '@mui/material';
+import { Typography, Grid, CircularProgress } from '@mui/material';
 import { useApi } from '../hooks/useApi';
 import { Profile as ProfileType } from '../api/types';
 import UserInformation from '../components/profile/UserInformation';
 import FitnessComponent from '../components/profile/FitnessComponent';
 import NutritionComponent from '../components/profile/NutritionComponent';
 import MealPlanningComponent from '../components/profile/MealPlanningComponent';
-import GoalsProgressTracker from '../components/profile/GoalsProgressTracker';
 import { MilitaryBranch } from '../theme/theme';
 
 interface ProfileProps {
@@ -106,9 +105,9 @@ const Profile: React.FC<ProfileProps> = ({ onBranchChange }) => {
         <Grid item xs={12} md={6}>
           <MealPlanningComponent profileData={profileData} onUpdate={handleProfileUpdate} />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <GoalsProgressTracker profileData={profileData} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </div>
   );
