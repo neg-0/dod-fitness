@@ -104,6 +104,14 @@ const WorkoutWizard: React.FC<WorkoutWizardProps> = ({
         >
           {loading ? 'Sending...' : 'Send'}
         </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={onCancel}
+          sx={{ mt: 2, ml: '8px'  }}
+          >
+            Cancel
+          </Button>
         {workoutPlan && (
           <Box mt={4}>
             <Typography variant="h6">Your Workout Plan:</Typography>
