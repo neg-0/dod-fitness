@@ -8,7 +8,6 @@ import {
 } from '../services/mockAuth';
 import { mockStorage } from '../services/mockStorage';
 import { UserRole } from '../contexts/AuthContext';
-import { differenceInHours, differenceInMinutes } from 'date-fns';
 
 interface User {
   id: string;
@@ -50,10 +49,11 @@ export function useApi() {
           authResponse = await mockLogin(loginRequest);
         }
 
+        console.log('logged in...', authResponse)
+
         setAccessToken(authResponse.access_token);
         setIsAuthenticated(true);
         mockStorage.setItem('accessToken', authResponse.access_token);
-        mockStorage.setItem('tokenTime', new Date().toISOString())
         mockStorage.setItem('refreshToken', authResponse.refresh_token);
         setUser(authResponse.user);
         return true;
@@ -97,7 +97,6 @@ export function useApi() {
     setUser(null);
     mockStorage.removeItem('accessToken');
     mockStorage.removeItem('refreshToken');
-    mockStorage.removeItem('tokenTime');
   }, []);
 
   const refreshToken = useCallback(async () => {
@@ -108,9 +107,6 @@ export function useApi() {
     }
 
     const refreshToken = mockStorage.getItem('refreshToken');
-    const tokenTime = mockStorage.getItem('tokenTime');
-
-    console.log('tokenTime', tokenTime, typeof tokenTime)
 
     if (!refreshToken) {
       throw new Error('No refresh token available');
@@ -143,15 +139,6 @@ export function useApi() {
 
     const storedToken = mockStorage.getItem('accessToken');
     const refreshToken = mockStorage.getItem('refreshToken');
-    const tokenTimeString = mockStorage.getItem('tokenTime');
-    const tokenTime = new Date(tokenTimeString);
-
-    // If we have a cached user and the token is less than 5 minutes old,
-    // our authentication is still valid
-    if (differenceInMinutes(tokenTime, new Date()) < 5 && user != null) {
-      setIsAuthenticated(true);
-      return user;
-    }
 
     let userData;
     if (storedToken) {
@@ -160,6 +147,7 @@ export function useApi() {
       try {
         const api = ApiFactory.getApi();
         const response = await api.authRefreshPost(refreshToken);
+        console.log('checkAuthStatus', response)
         if (response.data?.user)
         userData = response.data.user;
         setUser(response.data.user);
