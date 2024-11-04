@@ -9,6 +9,11 @@ export type AuthResponse = {
   access_token: string;
   refresh_token: string;
   expires_in: number;
+  user: {
+    email: string;
+    id: string;
+    roles: [string];
+  }
 };
 
 export type Profile = {
@@ -37,9 +42,9 @@ export type Profile = {
 };
 
 export type WorkoutPlanRequest = {
-  goal: 'strength' | 'endurance' | 'weight_loss' | 'general_fitness';
-  duration: number;
-  branch: string;
+  startDate: Date;
+  endDate: Date;
+  userInput: string;
 };
 
 export type Exercise = {
@@ -64,7 +69,7 @@ export type WorkoutPlan = {
   id: string;
   startDate: string;
   endDate: string;
-  weeklyPlan: DailyWorkout[];
+  workouts: DailyWorkout[];
 };
 
 export type NutritionPlanRequest = {
