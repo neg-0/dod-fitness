@@ -1,14 +1,10 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
-  Dialog,
-  DialogContent,
-  DialogActions,
   Button,
   Typography,
   Box,
   IconButton,
   TextField,
-  Avatar,
   useTheme,
 } from '@mui/material';
 import { X, Send } from 'lucide-react';
@@ -71,9 +67,9 @@ const MessageBubble = styled(Box, {
   borderRadius: '18px',
   marginBottom: theme.spacing(1),
   wordWrap: 'break-word',
-  color: isUser ? theme.palette.primary.contrastText : theme.palette.text.primary,
   backgroundColor: isUser ? theme.palette.primary.main : theme.palette.grey[200],
   alignSelf: isUser ? 'flex-end' : 'flex-start',
+  'p': {color: isUser ? theme.palette.primary.contrastText : theme.palette.text.primary,} // Sets the user's bubble text color
 }));
 
 const specialists = [
