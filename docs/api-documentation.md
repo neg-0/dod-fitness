@@ -106,7 +106,7 @@ Authorization: Bearer <your_jwt_token>
     "id": "string",
     "startDate": "2023-05-01",
     "endDate": "2023-05-28",
-    "weeklyPlan": [
+    "workouts": [
       {
         "day": "2023-05-01",
         "summary": "Strength Training",
