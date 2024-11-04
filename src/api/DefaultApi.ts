@@ -32,8 +32,8 @@ export class DefaultApi {
     return this.axiosInstance.post<AuthResponse>('/auth/login', loginRequest);
   }
 
-  async authRefreshPost(): Promise<AxiosResponse<AuthResponse>> {
-    return this.axiosInstance.post<AuthResponse>('/auth/refresh');
+  async authRefreshPost(refreshToken: string): Promise<AxiosResponse<AuthResponse>> {
+    return this.axiosInstance.post<AuthResponse>('/auth/refresh', {refresh_token: refreshToken});
   }
 
   async profileGet(): Promise<AxiosResponse<Profile>> {
@@ -47,13 +47,13 @@ export class DefaultApi {
   async workoutPlanPost(
     request: WorkoutPlanRequest
   ): Promise<AxiosResponse<WorkoutPlan>> {
-    return this.axiosInstance.post<WorkoutPlan>('/workout-plan', request);
+    return this.axiosInstance.post<WorkoutPlan>('/generate-workout-plan', request);
   }
 
   async nutritionPlanPost(
     request: NutritionPlanRequest
   ): Promise<AxiosResponse<NutritionPlan>> {
-    return this.axiosInstance.post<NutritionPlan>('/nutrition-plan', request);
+    return this.axiosInstance.post<NutritionPlan>('/generate-nutrition-plan', request);
   }
 
   async register(userData: {
@@ -72,5 +72,13 @@ export class DefaultApi {
     specialist: string;
   }): Promise<AxiosResponse<{ response?: string; error?: string }>> {
     return this.axiosInstance.post('/chat', data);
+  }
+
+  async dashboardLayoutGet(): Promise<AxiosResponse<any>> {
+    return this.axiosInstance.get('/dashboard');
+  }
+
+  async dashboardLayoutPost(layout: any): Promise<AxiosResponse<any>> {
+    return this.axiosInstance.post('/dashboard', { layout });
   }
 }
