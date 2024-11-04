@@ -28,6 +28,8 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
   allowedRoles,
 }) => {
   const { isAuthenticated, user } = useAuth();
+
+  console.log('isAuth', isAuthenticated, 'user', user)
   
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
