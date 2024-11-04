@@ -8,6 +8,7 @@ import {
 } from '../services/mockAuth';
 import { mockStorage } from '../services/mockStorage';
 import { UserRole } from '../contexts/AuthContext';
+import { differenceInHours, differenceInMinutes } from 'date-fns';
 
 interface User {
   id: string;
@@ -31,8 +32,9 @@ export function useApi() {
     const api = ApiFactory.getApi();
     if (accessToken) {
       api.setAccessToken(accessToken);
+      checkAuthStatus();
     }
-  }, [isAuthenticated, accessToken]);
+  }, [accessToken]);
 
   const login = useCallback(
     async (email: string, password: string, role: UserRole) => {
@@ -51,6 +53,7 @@ export function useApi() {
         setAccessToken(authResponse.access_token);
         setIsAuthenticated(true);
         mockStorage.setItem('accessToken', authResponse.access_token);
+        mockStorage.setItem('tokenTime', new Date().toISOString())
         mockStorage.setItem('refreshToken', authResponse.refresh_token);
         setUser(authResponse.user);
         return true;
@@ -94,10 +97,21 @@ export function useApi() {
     setUser(null);
     mockStorage.removeItem('accessToken');
     mockStorage.removeItem('refreshToken');
+    mockStorage.removeItem('tokenTime');
   }, []);
 
   const refreshToken = useCallback(async () => {
+
+    if (ApiFactory.getMode() === 'mock') {
+      setIsAuthenticated(true);
+      return true;
+    }
+
     const refreshToken = mockStorage.getItem('refreshToken');
+    const tokenTime = mockStorage.getItem('tokenTime');
+
+    console.log('tokenTime', tokenTime, typeof tokenTime)
+
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
@@ -125,14 +139,56 @@ export function useApi() {
     }
   }, [logout]);
 
-  const checkAuthStatus = useCallback(() => {
+  const checkAuthStatus = useCallback(async () => {
+
     const storedToken = mockStorage.getItem('accessToken');
-    if (storedToken && !isAuthenticated) {
+    const refreshToken = mockStorage.getItem('refreshToken');
+    const tokenTimeString = mockStorage.getItem('tokenTime');
+    const tokenTime = new Date(tokenTimeString);
+
+    // If we have a cached user and the token is less than 5 minutes old,
+    // our authentication is still valid
+    if (differenceInMinutes(tokenTime, new Date()) < 5 && user != null) {
+      setIsAuthenticated(true);
+      return user;
+    }
+
+    let userData;
+    if (storedToken) {
       setAccessToken(storedToken);
       setIsAuthenticated(true);
-      // Fetch user data here if needed
+      try {
+        const api = ApiFactory.getApi();
+        const response = await api.authRefreshPost(refreshToken);
+        if (response.data?.user)
+        userData = response.data.user;
+        setUser(response.data.user);
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
     }
-  }, [isAuthenticated]);
+
+    return storedToken ? userData : null;
+  }, []);
+
+  const generateWorkoutPlan = useCallback(async (startDate: Date, endDate: Date, userInput: string) => {
+    try {
+      const api = ApiFactory.getApi();
+      const workoutPlan = await api.workoutPlanPost({
+        startDate,
+        endDate,
+        userInput
+      })
+      return workoutPlan;
+    } catch (error) {
+      console.error("Failed to generate workout: ", error);
+    }
+  }, []);
 
   return {
     api: ApiFactory.getApi(),

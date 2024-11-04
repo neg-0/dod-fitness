@@ -45,20 +45,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     isAuthenticated,
     user,
   } = useApi();
-  const [authUser, setAuthUser] = useState(user);
+  const [authUser, setAuthUser] = useState<User | null>(null);
 
   useEffect(() => {
-    apiCheckAuthStatus();
-  }, [apiCheckAuthStatus]);
-
-  useEffect(() => {
-    setAuthUser(user);
-  }, [user]);
+    const fetchUserData = async () => {
+      if (isAuthenticated) {
+        const userData = await apiCheckAuthStatus(); // Ensure user data is fetched
+        setAuthUser(userData);
+      } else {
+        setAuthUser(null);
+      }
+    };
+    fetchUserData();
+  }, [isAuthenticated, apiCheckAuthStatus]);
 
   const login = async (email: string, password: string, role: UserRole) => {
     const success = await apiLogin(email, password, role);
     if (success) {
-      setAuthUser(user);
+      const userData = await apiCheckAuthStatus(); // Fetch user data after login
+      setAuthUser(userData);
     }
     return success;
   };
