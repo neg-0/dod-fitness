@@ -46,9 +46,10 @@ const WorkoutPlan: React.FC = () => {
       <Typography variant="h4" component="h2" gutterBottom>
         Your Personalized Workout Plan
       </Typography>
+      <Card className="mb-4">
+        <CardContent>
       {!showWizard && (
-        <Card className="mb-4">
-          <CardContent>
+        <>
             <Typography variant="body1" paragraph>
               Create a personalized workout plan tailored to your fitness goals
               and DoD standards.
@@ -60,15 +61,16 @@ const WorkoutPlan: React.FC = () => {
             >
               Create Workout Plan
             </Button>
-          </CardContent>
-        </Card>
+            </>
       )}
       {showWizard && (
         <WorkoutWizard
-          onComplete={handleWizardComplete}
-          onCancel={() => setShowWizard(false)}
+        onComplete={handleWizardComplete}
+        onCancel={() => setShowWizard(false)}
         />
       )}
+      </CardContent>
+      </Card>
       
         <>
           <WorkoutDashboard workoutPlan={workoutPlan} />
