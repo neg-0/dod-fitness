@@ -80,13 +80,15 @@ const FitnessComponent: React.FC<FitnessComponentProps> = ({ profileData, onUpda
             <Typography variant="body1">Fitness Waivers/Limitations: {profileData.fitnessWaivers || 'None'}</Typography>
             <Typography variant="body1">Fitness Goals: {profileData.fitnessGoals || 'Not specified'}</Typography>
             <Typography variant="body1">Fitness Preferences:</Typography>
-            {profileData.fitnessPreferences ? (
-              profileData.fitnessPreferences.split(',').map((pref, index) => (
-                <Chip key={index} label={pref.trim()} className="m-1" />
-              ))
-            ) : (
-              <Typography variant="body2">Not specified</Typography>
-            )}
+            <div>
+              {profileData.fitnessPreferences ? (
+                profileData.fitnessPreferences.split(',').map((pref, index) => (
+                  <Chip key={index} label={pref.trim()} className="m-1" />
+                ))
+              ) : (
+                <Typography variant="body2">Not specified</Typography>
+              )}
+            </div>
             <Button onClick={() => setEditMode(true)} variant="contained" color="primary" style={{ marginTop: '16px' }}>
               Edit
             </Button>
