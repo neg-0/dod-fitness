@@ -29,7 +29,7 @@ import WorkoutDayDetails from './WorkoutDayDetails';
 import { getWorkoutTypeColor } from '../../utils/workoutUtils';
 
 interface WorkoutCalendarProps {
-  workoutPlan: WorkoutPlan;
+  workoutPlan?: WorkoutPlan;
   onUpdateWorkoutPlan: (updatedPlan: WorkoutPlan) => void;
 }
 
@@ -75,7 +75,7 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
     return (
       <div className="grid grid-cols-7 gap-2">
         {daysInWeek.map((day) => {
-          const workout = workoutPlan?.weeklyPlan.find((w) =>
+          const workout = workoutPlan?.workouts.find((w) =>
             isSameDay(new Date(w.day), day)
           );
 
@@ -125,7 +125,7 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   );
 
   const renderDayCard = (day: Date, isWeekView: boolean = false) => {
-    const workout = workoutPlan.weeklyPlan.find((w) =>
+    const workout = workoutPlan.workouts.find((w) =>
       isSameDay(new Date(w.day), day)
     );
     const isCurrentMonth = isSameMonth(day, currentDate);
@@ -182,10 +182,10 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   };
 
   const handleUpdateWorkout = (updatedWorkout: DailyWorkout) => {
-    const updatedWeeklyPlan = workoutPlan.weeklyPlan.map((workout) =>
+    const updatedworkouts = workoutPlan.workouts.map((workout) =>
       isSameDay(new Date(workout.day), selectedDay!) ? updatedWorkout : workout
     );
-    const updatedPlan = { ...workoutPlan, weeklyPlan: updatedWeeklyPlan };
+    const updatedPlan = { ...workoutPlan, workouts: updatedworkouts };
     onUpdateWorkoutPlan(updatedPlan);
   };
 
@@ -252,7 +252,7 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
           {selectedDay && (
             <WorkoutDayDetails
               date={selectedDay}
-              workout={workoutPlan.weeklyPlan.find((w) =>
+              workout={workoutPlan.workouts.find((w) =>
                 isSameDay(new Date(w.day), selectedDay)
               )}
               onClose={handleCloseModal}
