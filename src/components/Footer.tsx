@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <Box component="footer" sx={{ bgcolor: theme.palette.primary.main, py: 3 }}>
+    <Box component="footer" sx={{ bgcolor: theme.palette.background.default, py: 3 }}>
       <Container maxWidth="lg">
         <Typography variant="body2" align="center" sx={{ color: theme.palette.primary.contrastText }}>
           © {new Date().getFullYear()} Atlas. All rights reserved.
