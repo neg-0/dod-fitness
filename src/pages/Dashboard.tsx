@@ -9,47 +9,77 @@ import ModuleWrapper from '../components/dashboard/modules/ModuleWrapper';
 import AddModuleModal from '../components/dashboard/AddModuleModal';
 import { useAuth } from '../contexts/AuthContext';
 import { DashboardProvider, useDashboard } from '../contexts/DashboardContext';
+import { useApi } from '../hooks/useApi';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DashboardContent: React.FC = () => {
+  const { api } = useApi();
   const { user } = useAuth();
   const { editMode, setEditMode } = useDashboard();
-  const [layouts, setLayouts] = useState<{ lg: Array<any> }>({ lg: [] });
+  const [layouts, setLayouts] = useState<{ lg: Array<any> }>();
   const [activeModules, setActiveModules] = useState<string[]>([]);
   const [isAddModuleModalOpen, setIsAddModuleModalOpen] = useState(false);
 
+  // useEffect(() => {
+  //   if (user) {
+  //     const userModules = moduleRegistry.getForRole(user.role);
+  //     const moduleIds = userModules.map(module => module.moduleMetadata.id);
+  //     setActiveModules(moduleIds);
+
+  //     const initialLayouts = {
+  //       lg: userModules.map(module => ({
+  //         i: module.moduleMetadata.id,
+  //         x: module.moduleMetadata.defaultLayout.x || 0,
+  //         y: module.moduleMetadata.defaultLayout.y || 0,
+  //         w: module.moduleMetadata.defaultLayout.w || 2,
+  //         h: module.moduleMetadata.defaultLayout.h || 2,
+  //         minW: module.moduleMetadata.defaultLayout.minW,
+  //         maxW: module.moduleMetadata.defaultLayout.maxW,
+  //         minH: module.moduleMetadata.defaultLayout.minH,
+  //         maxH: module.moduleMetadata.defaultLayout.maxH,
+  //       })),
+  //     };
+  //     // setLayouts(initialLayouts);
+  //   }
+  // }, [user]);
+
   useEffect(() => {
-    if (user) {
-      const userModules = moduleRegistry.getForRole(user.role);
-      const moduleIds = userModules.map(module => module.moduleMetadata.id);
-      setActiveModules(moduleIds);
+    const fetchLayout = async () => {
+      if (user) {
+        const userModules = moduleRegistry.getForRole(user.role);
+        const moduleIds = userModules.map(module => module.moduleMetadata.id);
+        setActiveModules(moduleIds);
 
-      const initialLayouts = {
-        lg: userModules.map(module => ({
-          i: module.moduleMetadata.id,
-          x: module.moduleMetadata.defaultLayout.x || 0,
-          y: module.moduleMetadata.defaultLayout.y || 0,
-          w: module.moduleMetadata.defaultLayout.w || 2,
-          h: module.moduleMetadata.defaultLayout.h || 2,
-          minW: module.moduleMetadata.defaultLayout.minW,
-          maxW: module.moduleMetadata.defaultLayout.maxW,
-          minH: module.moduleMetadata.defaultLayout.minH,
-          maxH: module.moduleMetadata.defaultLayout.maxH,
-        })),
-      };
-      setLayouts(initialLayouts);
-    }
-  }, [user]);
+        try {
+          const response = await api.dashboardLayoutGet();
+          console.log("Dashboard layout resp", response.data.layout)
+          setLayouts(response.data.layout);
+        } catch (error) {
+          console.error('Error fetching dashboard layout:', error);
+        }
+      }
+    };
 
-  const handleLayoutChange = (_layout: any, layouts: any) => {
-    setLayouts(layouts);
-    // Save layout to localStorage or backend
-    if (user) {
-      localStorage.setItem(`dashboard_layout_${user.id}`, JSON.stringify(layouts));
-      console.log("Layout:", JSON.stringify(layouts));
-    }
+    fetchLayout();
+  }, [api, user]);
+
+  const handleLayoutChange = (newLayouts: any, allLayouts: any) => {
+    console.log('changed layout', allLayouts)
+    setLayouts(allLayouts);
   };
+
+  const handleSaveLayout = () => {
+    console.log('saving layout', layouts)
+    // Save layout to the server
+    api.dashboardLayoutPost(layouts)
+      .then(() => {
+        console.log('Layout saved successfully');
+      })
+      .catch((error: any) => {
+        console.error('Error saving layout:', error);
+      });
+  }
 
   const handleAddModule = (moduleId: string) => {
     if (!activeModules.includes(moduleId)) {
@@ -102,10 +132,11 @@ const DashboardContent: React.FC = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1,
-        '.react-resizable-handle': {
-          zIndex: 1003,
-        },
+    <Box sx={{
+      flexGrow: 1,
+      '.react-resizable-handle': {
+        zIndex: 1003,
+      },
     }}>
       <Box
         display="flex"
@@ -127,7 +158,10 @@ const DashboardContent: React.FC = () => {
           <Button
             variant="outlined"
             color="primary"
-            onClick={() => setEditMode(!editMode)}
+            onClick={() => {
+              setEditMode(!editMode)
+              if (editMode) { handleSaveLayout() }
+            }}
           >
             {editMode ? 'Save Layout' : 'Edit Layout'}
           </Button>
