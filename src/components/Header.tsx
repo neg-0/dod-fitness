@@ -137,7 +137,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
           >
             
           </Typography>
-          {!isMobile && process.env.NODE_ENV === 'development' && (
+          {!isMobile && (
             <>
               <Button
                 color="inherit"
