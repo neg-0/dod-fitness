@@ -30,6 +30,11 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
   const { isAuthenticated, user } = useAuth();
 
   console.log('isAuth', isAuthenticated, 'user', user)
+
+  // If the user is dustin@negativezeroinc.com or evan.colon98@gmail.com, then they are authenticated
+  if (user && (user.email === 'dustin@negativezeroinc.com' || user.email === 'evan.colon98@gmail.com')) {
+    return <>{children}</>;
+  }
   
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
