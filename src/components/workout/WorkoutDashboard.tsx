@@ -3,11 +3,11 @@ import { Typography, Card, CardContent, LinearProgress } from '@mui/material';
 import { WorkoutPlan } from '../../api/types';
 
 interface WorkoutDashboardProps {
-  workoutPlan: WorkoutPlan | null;
+  workoutPlans: WorkoutPlan[];
 }
 
-const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlan }) => {
-  const calculateProgress = () => {
+const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlans }) => {
+  const calculateProgress = (workoutPlan: WorkoutPlan) => {
     if (!workoutPlan) return 0;
 
     const totalDays =
@@ -20,49 +20,51 @@ const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlan }) => {
     return Math.min(Math.max((daysPassed / totalDays) * 100, 0), 100);
   };
 
-  const getWorkoutGoal = () => {
-    if (!workoutPlan || !workoutPlan.weeklyPlan || workoutPlan.weeklyPlan.length === 0) {
+  const getWorkoutGoal = (workoutPlan: WorkoutPlan) => {
+    if (!workoutPlan || !workoutPlan.workouts || workoutPlan.workouts.length === 0) {
       return 'Not specified';
     }
-    if (workoutPlan.weeklyPlan[0].exercises && workoutPlan.weeklyPlan[0].exercises.length > 0) {
-      return workoutPlan.weeklyPlan[0].exercises[0].name;
+    if (workoutPlan.workouts[0].exercises && workoutPlan.workouts[0].exercises.length > 0) {
+      return workoutPlan.workouts[0].exercises[0].name;
     }
     return 'Not specified';
   };
 
-  const getNextWorkoutDate = () => {
-    if (!workoutPlan || !workoutPlan.weeklyPlan || workoutPlan.weeklyPlan.length === 0) {
+  const getNextWorkoutDate = (workoutPlan: WorkoutPlan) => {
+    if (!workoutPlan || !workoutPlan.workouts || workoutPlan.workouts.length === 0) {
       return 'Not scheduled';
     }
-    return workoutPlan.weeklyPlan[0].day;
+    return workoutPlan.workouts[0].day;
   };
 
   return (
-    <Card className="mb-4">
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Workout Dashboard
+    <>
+      {workoutPlans.length > 0 ? (
+        workoutPlans.map((workoutPlan) => (
+          <Card className="mb-4" key={workoutPlan.id}>
+            <CardContent>
+              <Typography variant="h6" gutterBottom>
+                Workout Dashboard for {workoutPlan.id}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Goal: {getWorkoutGoal(workoutPlan)} improvement
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                Progress:
+              </Typography>
+              <LinearProgress variant="determinate" value={calculateProgress(workoutPlan)} />
+              <Typography variant="body2" className="mt-2">
+                Next workout: {getNextWorkoutDate(workoutPlan)}
+              </Typography>
+            </CardContent>
+          </Card>
+        ))
+      ) : (
+        <Typography variant="body1" gutterBottom>
+          No workout plans available. Please create a workout plan to see your dashboard.
         </Typography>
-        {workoutPlan ? (
-          <>
-            <Typography variant="body1" gutterBottom>
-              Goal: {getWorkoutGoal()} improvement
-            </Typography>
-            <Typography variant="body2" gutterBottom>
-              Progress:
-            </Typography>
-            <LinearProgress variant="determinate" value={calculateProgress()} />
-            <Typography variant="body2" className="mt-2">
-              Next workout: {getNextWorkoutDate()}
-            </Typography>
-          </>
-        ) : (
-          <Typography variant="body1" gutterBottom>
-            No workout plan available. Please create a workout plan to see your dashboard.
-          </Typography>
-        )}
-      </CardContent>
-    </Card>
+      )}
+    </>
   );
 };
 

@@ -8,37 +8,29 @@ import WorkoutDashboard from '../components/workout/WorkoutDashboard';
 
 const WorkoutPlan: React.FC = () => {
   const { api } = useApi();
-  const [workoutPlan, setWorkoutPlan] = useState<WorkoutPlanType | null>(null);
+  const [workoutPlans, setWorkoutPlans] = useState<WorkoutPlanType[]>([]);
+  const [selectedWorkoutPlan, setSelectedWorkoutPlan] = useState<WorkoutPlanType>();
   const [showWizard, setShowWizard] = useState(false);
 
   useEffect(() => {
     const savedPlan = localStorage.getItem('workoutPlan');
     if (savedPlan) {
-      setWorkoutPlan(JSON.parse(savedPlan));
+      setWorkoutPlans(JSON.parse(savedPlan));
     }
   }, []);
 
-  const handleWizardComplete = async (wizardData: any) => {
-    if (!api) return;
-
-    try {
-      const response = await api.workoutPlanPost({
-        goal: wizardData.goal,
-        duration: wizardData.duration,
-        branch: wizardData.branch,
-      });
-      setWorkoutPlan(response.data);
-      localStorage.setItem('workoutPlan', JSON.stringify(response.data));
+  const handleWizardComplete = (workoutPlan: WorkoutPlanType) => {
+      setWorkoutPlans([workoutPlan]);
       setShowWizard(false);
-    } catch (error) {
-      console.error('Error generating workout plan:', error);
-      alert('Failed to generate workout plan. Please try again.');
-    }
   };
 
   const handleUpdateWorkoutPlan = (updatedPlan: WorkoutPlanType) => {
-    setWorkoutPlan(updatedPlan);
-    localStorage.setItem('workoutPlan', JSON.stringify(updatedPlan));
+    setWorkoutPlans((prev) => prev.map(plan => plan.id === updatedPlan.id ? updatedPlan : plan));
+  };
+
+  const handleChangeSelectedWorkoutPlan = (id: string) => {
+    const plan = workoutPlans.find((p: WorkoutPlanType) => p.id = id) || undefined;
+    setSelectedWorkoutPlan(plan);
   };
 
   return (
@@ -73,9 +65,9 @@ const WorkoutPlan: React.FC = () => {
       </Card>
       
         <>
-          <WorkoutDashboard workoutPlan={workoutPlan} />
+          <WorkoutDashboard workoutPlans={workoutPlans} changeSelectedWorkoutPlan={handleChangeSelectedWorkoutPlan}/>
           <WorkoutCalendar
-            workoutPlan={workoutPlan}
+            workoutPlan={selectedWorkoutPlan}
             onUpdateWorkoutPlan={handleUpdateWorkoutPlan}
           />
         </>

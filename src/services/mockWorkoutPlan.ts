@@ -1,36 +1,29 @@
 import { WorkoutPlan, WorkoutPlanRequest, DailyWorkout } from '../api';
-import { addDays, format, startOfWeek, endOfWeek } from 'date-fns';
+import { addDays, differenceInDays, format } from 'date-fns';
 
 const workoutTypes: ('cardio' | 'strength' | 'yoga' | 'hiit' | 'rest')[] = ['cardio', 'strength', 'yoga', 'hiit', 'rest'];
 
 export const generateMockWorkoutPlan = (request: WorkoutPlanRequest): WorkoutPlan => {
-  const startDate = new Date();
-  const endDate = addDays(startDate, request.duration * 7);
-
   return {
     id: '1',
-    startDate: startDate.toISOString(),
-    endDate: endDate.toISOString(),
-    weeklyPlan: generateMockWeeklyPlan(startDate, request.duration),
+    startDate: request.startDate.toISOString(),
+    endDate: request.endDate.toISOString(),
+    workouts: generateMockWorkouts(request.startDate, request.endDate),
   };
 };
 
-const generateMockWeeklyPlan = (startDate: Date, weeks: number): DailyWorkout[] => {
-  const weeklyPlan: DailyWorkout[] = [];
+const generateMockWorkouts = (startDate: Date, endDate: Date): DailyWorkout[] => {
+  const workouts: DailyWorkout[] = [];
 
-  for (let week = 0; week < weeks; week++) {
-    const weekStart = startOfWeek(addDays(startDate, week * 7));
-    const weekEnd = endOfWeek(weekStart);
+  const numOfDays = differenceInDays(startDate, endDate);
 
-    for (let day = 0; day < 7; day++) {
-      const currentDate = addDays(weekStart, day);
-      const workoutType = workoutTypes[Math.floor(Math.random() * workoutTypes.length)];
-
-      weeklyPlan.push(generateDailyWorkout(currentDate, workoutType));
-    }
+  for (let day = 0; day < numOfDays; day++) {
+    const currentDate = addDays(startDate, day);
+    const workoutType = workoutTypes[Math.floor(Math.random() * workoutTypes.length)];
+    workouts.push(generateDailyWorkout(currentDate, workoutType));
   }
 
-  return weeklyPlan;
+  return workouts;
 };
 
 const generateDailyWorkout = (date: Date, workoutType: 'cardio' | 'strength' | 'yoga' | 'hiit' | 'rest'): DailyWorkout => {

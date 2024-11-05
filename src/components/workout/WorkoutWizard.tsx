@@ -10,6 +10,11 @@ import {
   ListItem,
   ListItemText,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { differenceInDays, addDays } from 'date-fns';
+import { useApi } from '../../hooks/useApi';
 
 interface WorkoutWizardProps {
   onComplete: (data: any) => void;
@@ -20,46 +25,46 @@ const WorkoutWizard: React.FC<WorkoutWizardProps> = ({
   onComplete,
   onCancel,
 }) => {
-  const [messages, setMessages] = useState<{ user: string; bot: string }[]>([]);
   const [userInput, setUserInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [workoutPlan, setWorkoutPlan] = useState<any>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
-  const handleSendMessage = async () => {
-    if (!userInput) return;
+  const { api } = useApi();
 
-    // Add user message to chat
-    setMessages((prev) => [...prev, { user: userInput, bot: '' }]);
-    setUserInput('');
+  const handleGenerateWorkout = async () => {
+    if (!api) return;
+
     setLoading(true);
 
-    // Simulate LLM response (replace with actual API call)
-    const botResponse = await simulateLLMResponse(userInput);
-    
-    // Add bot response to chat
-    setMessages((prev) => {
-      const updatedMessages = [...prev];
-      updatedMessages[updatedMessages.length - 1].bot = botResponse;
-      return updatedMessages;
-    });
+    if (!startDate || !endDate) {
+      throw new Error("Must select a start and end date.");
+    }
 
-    // Update workout plan based on bot response
-    updateWorkoutPlan(botResponse);
-    setLoading(false);
-  };
+    // Clamp the end date to a max of 30 days
+    let clampedEndDate = endDate;
+    if (differenceInDays(endDate, startDate) > 30) {
+      clampedEndDate = addDays(startDate, 30);
+    }
 
-  const simulateLLMResponse = async (input: string) => {
-    // Simulate a delay for the LLM response
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(`Received your input: "${input}". Let's create your workout plan!`);
-      }, 1000);
-    });
+    try {
+      const response = await api.workoutPlanPost({ startDate, endDate, userInput });
+      setWorkoutPlan(response.data);
+      localStorage.setItem('workoutPlan', JSON.stringify(response.data));
+
+      // Update workout plan based on bot response
+      setLoading(false);
+
+      onComplete(response.data);
+    } catch (error) {
+      console.error('Error generating workout plan:', error);
+      alert('Failed to generate workout plan. Please try again.');
+    }
   };
 
   const updateWorkoutPlan = (response: string) => {
     // Logic to update the workout plan based on the response
-    // This is where you would parse the response and update the state
     setWorkoutPlan((prev) => ({
       ...prev,
       details: response, // Example of adding response to the plan
@@ -67,59 +72,63 @@ const WorkoutWizard: React.FC<WorkoutWizardProps> = ({
   };
 
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h5" gutterBottom>
-          Let's Create Your Workout Plan!
-        </Typography>
-        <Box mb={2}>
-          <List>
-            {messages.map((msg, index) => (
-              <ListItem key={index}>
-                <ListItemText
-                  primary={`User: ${msg.user}`}
-                  secondary={`Bot: ${msg.bot}`}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </Box>
-        <TextField
-          fullWidth
-          label="Type your message..."
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              handleSendMessage();
-            }
-          }}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSendMessage}
-          disabled={loading}
-          sx={{ mt: 2 }}
-        >
-          {loading ? 'Sending...' : 'Send'}
-        </Button>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={onCancel}
-          sx={{ mt: 2, ml: '8px'  }}
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Card>
+        <CardContent>
+          <Typography variant="h5">
+            Let's Create Your Workout Plan!
+          </Typography>
+          <TextField
+            fullWidth
+            label="Describe your goals, preferences, and any limitations..."
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleGenerateWorkout();
+              }
+            }}
+          />
+          <DatePicker
+            label="Start Date"
+            value={startDate}
+            onChange={(newValue) => setStartDate(newValue)}
+            renderInput={(params) => <TextField {...params} fullWidth />}
+            sx={{ m: 2 }}
+          />
+          <DatePicker
+            label="End Date"
+            value={endDate}
+            onChange={(newValue) => setEndDate(newValue)}
+            renderInput={(params) => <TextField {...params} fullWidth />}
+            sx={{ m: 2 }}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleGenerateWorkout}
+            disabled={loading}
+            sx={{ mt: 2 }}
+          >
+            {loading ? 'Generating...' : 'Generate'}
+          </Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={onCancel}
+            sx={{ mt: 2, ml: '8px' }}
           >
             Cancel
           </Button>
-        {workoutPlan && (
-          <Box mt={4}>
-            <Typography variant="h6">Your Workout Plan:</Typography>
-            <Typography variant="body1">{workoutPlan.details}</Typography>
-          </Box>
-        )}
-      </CardContent>
-    </Card>
+          {workoutPlan && (
+            <Box mt={4}>
+              <Typography variant="h6">Your Workout Plan:</Typography>
+              <Typography variant="body1">{workoutPlan.details}</Typography>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+    </LocalizationProvider>
   );
 };
 
