@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Card, CardContent, LinearProgress } from '@mui/material';
 import { WorkoutPlan } from '../../api/types';
-import { format } from 'date-fns';
+import { format, startOfDay, isAfter, addDays } from 'date-fns';
 
 interface WorkoutDashboardProps {
   workoutPlans: WorkoutPlan[];
@@ -35,8 +35,16 @@ const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlans }) => 
     if (!workoutPlan || !workoutPlan.workouts || workoutPlan.workouts.length === 0) {
       return null;
     }
-    const nextDate = workoutPlan.workouts[0].day;
-    return nextDate ? new Date(nextDate) : null;
+    
+    const today = startOfDay(new Date());
+    const futureWorkouts = workoutPlan.workouts
+      .filter(workout => isAfter(new Date(workout.day), today))
+      .sort((a, b) => new Date(a.day).getTime() - new Date(b.day).getTime());
+
+    // Add 1 day to compensate for timezone
+    const nextWorkoutDate = addDays(new Date(futureWorkouts[0].day), 1);
+
+    return nextWorkoutDate;
   };
 
   return (

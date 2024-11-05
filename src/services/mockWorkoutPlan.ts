@@ -31,7 +31,11 @@ const generateDailyWorkout = (date: Date, workoutType: 'cardio' | 'strength' | '
   const caloriesBurned = workoutType === 'rest' ? 0 : Math.floor(Math.random() * 300) + 100;
 
   return {
-    day: format(date, 'yyyy-MM-dd'),
+    day: new Date(Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    )).toISOString().split('T')[0],
     summary: getWorkoutSummary(workoutType),
     duration,
     caloriesBurned,

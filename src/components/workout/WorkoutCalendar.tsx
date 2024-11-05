@@ -79,8 +79,19 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
     return (
       <div className="grid grid-cols-7 gap-2">
         {daysInWeek.map((day) => {
-          const workout = workoutPlan?.workouts?.find((w) =>
-            isSameDay(new Date(w.day), day)
+          const workout = workoutPlan?.workouts?.find((w) => 
+            isSameDay(
+              new Date(Date.UTC(
+                new Date(w.day).getUTCFullYear(),
+                new Date(w.day).getUTCMonth(),
+                new Date(w.day).getUTCDate()
+              )),
+              new Date(Date.UTC(
+                day.getFullYear(),
+                day.getMonth(),
+                day.getDate()
+              ))
+            )
           );
 
           return (
@@ -203,7 +214,18 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   const handleUpdateWorkout = (updatedWorkout: DailyWorkout) => {
     if (!workoutPlan) return;
     const updatedworkouts = workoutPlan.workouts.map((workout) =>
-      isSameDay(new Date(workout.day), selectedDay!) ? updatedWorkout : workout
+      isSameDay(
+        new Date(Date.UTC(
+          new Date(workout.day).getUTCFullYear(),
+          new Date(workout.day).getUTCMonth(),
+          new Date(workout.day).getUTCDate()
+        )),
+        new Date(Date.UTC(
+          selectedDay!.getFullYear(),
+          selectedDay!.getMonth(),
+          selectedDay!.getDate()
+        ))
+      ) ? updatedWorkout : workout
     );
     const updatedPlan = { ...workoutPlan, workouts: updatedworkouts };
     onUpdateWorkoutPlan(updatedPlan);
@@ -233,10 +255,10 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
             Previous {view === 'month' ? 'Month' : 'Week'}
           </Button>
           <Typography variant="h6">
-            {format(
-              currentDate,
-              view === 'month' ? 'MMMM yyyy' : "'Week of' MMM d, yyyy"
-            )}
+            {view === 'month' 
+              ? format(currentDate, 'MMMM yyyy')
+              : `Week of ${format(startOfWeek(currentDate), 'MMM d, yyyy')}`
+            }
           </Typography>
           <Button onClick={handleNext}>
             Next {view === 'month' ? 'Month' : 'Week'}
@@ -273,7 +295,18 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
             <WorkoutDayDetails
               date={selectedDay}
               workout={workoutPlan.workouts.find((w) =>
-                isSameDay(new Date(w.day), selectedDay)
+                isSameDay(
+                  new Date(Date.UTC(
+                    new Date(w.day).getUTCFullYear(),
+                    new Date(w.day).getUTCMonth(),
+                    new Date(w.day).getUTCDate()
+                  )),
+                  new Date(Date.UTC(
+                    selectedDay.getFullYear(),
+                    selectedDay.getMonth(),
+                    selectedDay.getDate()
+                  ))
+                )
               )}
               onClose={handleCloseModal}
               onUpdateWorkout={handleUpdateWorkout}
