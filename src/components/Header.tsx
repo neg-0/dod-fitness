@@ -168,6 +168,21 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
+                PaperProps={{
+                  sx: {
+                    backgroundColor: theme.palette.background.default,
+                    minWidth: '200px',
+                    '& .MuiMenuItem-root': {
+                      justifyContent: 'flex-end',
+                      color: 'white',
+                      padding: '8px 16px',
+                      '&:hover': {
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        color: '#f2f2da',
+                      },
+                    },
+                  },
+                }}
               >
                 {devDashboards.map((dashboard) => (
                   <MenuItem
