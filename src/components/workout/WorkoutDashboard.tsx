@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography, Card, CardContent, LinearProgress } from '@mui/material';
 import { WorkoutPlan } from '../../api/types';
+import { format } from 'date-fns';
 
 interface WorkoutDashboardProps {
   workoutPlans: WorkoutPlan[];
@@ -44,7 +45,7 @@ const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlans }) => 
           <Card className="mb-4" key={workoutPlan.id}>
             <CardContent>
               <Typography variant="h6" gutterBottom>
-                Workout Dashboard for {workoutPlan.id}
+                Workout Dashboard for {workoutPlan.name}
               </Typography>
               <Typography variant="body1" gutterBottom>
                 Goal: {getWorkoutGoal(workoutPlan)} improvement
@@ -54,7 +55,8 @@ const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlans }) => 
               </Typography>
               <LinearProgress variant="determinate" value={calculateProgress(workoutPlan)} />
               <Typography variant="body2" className="mt-2">
-                Next workout: {getNextWorkoutDate(workoutPlan)}
+                {/* Format in 04 Nov 2024 style */}
+                Next workout: {format(new Date(getNextWorkoutDate(workoutPlan)), 'dd MMM yyyy')}
               </Typography>
             </CardContent>
           </Card>

@@ -13,10 +13,12 @@ const WorkoutPlan: React.FC = () => {
   const [showWizard, setShowWizard] = useState(false);
 
   useEffect(() => {
-    const savedPlan = localStorage.getItem('workoutPlan');
-    if (savedPlan) {
-      setWorkoutPlans(JSON.parse(savedPlan));
-    }
+    // Fetch workout plans
+    api.workoutPlanGet().then((response) => {
+      console.log('workoutPlans', response.data);
+      setWorkoutPlans(response.data);
+      setSelectedWorkoutPlan(response.data[0]);
+    });
   }, []);
 
   const handleWizardComplete = (workoutPlan: WorkoutPlanType) => {

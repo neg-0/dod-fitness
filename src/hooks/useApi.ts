@@ -178,6 +178,16 @@ export function useApi() {
     }
   }, []);
 
+  const workoutPlanGet = useCallback(async () => {
+    try {
+      const api = ApiFactory.getApi();
+      const response = await api.workoutPlanGet();
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get workout plans: ", error);
+    }
+  }, []);
+
   return {
     api: ApiFactory.getApi(),
     login,
@@ -187,5 +197,6 @@ export function useApi() {
     isAuthenticated,
     user,
     checkAuthStatus,
+    workoutPlanGet,
   };
 }

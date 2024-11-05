@@ -41,6 +41,8 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [view, setView] = useState<'month' | 'week'>('month');
 
+  console.log('workoutPlan', workoutPlan);
+
   const handleViewChange = (
     event: React.MouseEvent<HTMLElement>,
     newView: 'month' | 'week' | null
@@ -75,28 +77,30 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
     return (
       <div className="grid grid-cols-7 gap-2">
         {daysInWeek.map((day) => {
-          const workout = workoutPlan?.workouts.find((w) =>
+          const workout = workoutPlan?.workouts?.find((w) =>
             isSameDay(new Date(w.day), day)
           );
 
           return (
-            <Card key={day.toISOString()} className="p-2">
-              <Typography variant="body2" className="text-center">
+            <Card key={day.toISOString()} className="p-4 shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300" onClick={() => setSelectedDay(day)}>
+              <Typography variant="h6" className="text-center font-bold text-gray-800">
                 {format(day, 'EEEE')}
               </Typography>
               {workout ? (
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center mt-4">
                   <img
                     src={getWorkoutImage(workout.workoutType)}
                     alt={workout.workoutType}
-                    className="w-full h-24 object-cover"
+                    className="w-full h-48 object-cover rounded-lg" style={{ opacity: '0.8' }}
                   />
-                  <Typography variant="caption" className="mt-1">
-                    {workout.summary}
-                  </Typography>
+                  <div className="p-4 bg-white rounded-b-lg">
+                    <Typography variant="body1" className="text-center text-gray-700">
+                      {workout.summary}
+                    </Typography>
+                  </div>
                 </div>
               ) : (
-                <Typography variant="caption" className="text-center">
+                <Typography variant="body1" className="text-center text-gray-700 mt-4">
                   No workout
                 </Typography>
               )}
@@ -108,12 +112,12 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   };
 
   const getWorkoutImage = (workoutType: string) => {
-    const images = {
-      cardio: '/images/cardio.png',
-      strength: '/images/strength.png',
-      yoga: '/images/yoga.png',
-      hiit: '/images/hiit.png',
-      rest: '/images/rest.png',
+    const images: Record<string, string> = {
+      cardio: '/images/exercises/cardio.jpg',
+      strength: '/images/exercises/strength.jpg',
+      yoga: '/images/exercises/yoga.jpg',
+      hiit: '/images/exercises/hiit.jpg',
+      rest: '/images/exercises/rest.jpg',
     };
     return images[workoutType] || '/images/default.png';
   };
@@ -125,7 +129,7 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   );
 
   const renderDayCard = (day: Date, isWeekView: boolean = false) => {
-    const workout = workoutPlan.workouts.find((w) =>
+    const workout = workoutPlan?.workouts?.find((w) =>
       isSameDay(new Date(w.day), day)
     );
     const isCurrentMonth = isSameMonth(day, currentDate);
@@ -249,7 +253,7 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
         aria-labelledby="workout-day-details"
       >
         <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
-          {selectedDay && (
+          {selectedDay && workoutPlan && (
             <WorkoutDayDetails
               date={selectedDay}
               workout={workoutPlan.workouts.find((w) =>

@@ -67,6 +67,7 @@ export type DailyWorkout = {
 
 export type WorkoutPlan = {
   id: string;
+  name: string;
   startDate: string;
   endDate: string;
   workouts: DailyWorkout[];

@@ -50,6 +50,10 @@ export class DefaultApi {
     return this.axiosInstance.post<WorkoutPlan>('/generate-workout-plan', request);
   }
 
+  async workoutPlanGet(): Promise<AxiosResponse<WorkoutPlan[]>> {
+    return this.axiosInstance.get<WorkoutPlan[]>('/workout-plan');
+  }
+
   async nutritionPlanPost(
     request: NutritionPlanRequest
   ): Promise<AxiosResponse<NutritionPlan>> {
