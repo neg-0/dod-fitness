@@ -9,8 +9,10 @@ import {
   useMediaQuery,
   useTheme,
   Badge,
+  Menu,
+  MenuItem,
 } from '@mui/material';
-import { Menu as MenuIcon, Bell } from 'lucide-react';
+import { Menu as MenuIcon, Bell, ChevronDown } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -20,10 +22,31 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [devMenuAnchor, setDevMenuAnchor] = useState<null | HTMLElement>(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const devDashboards = [
+    { label: 'Main Dashboard', path: '/dashboard' },
+    { label: 'Unit Leadership', path: '/unit-leadership' },
+    { label: 'Fitness Specialist', path: '/fitness-specialist' },
+    { label: 'Nutrition Specialist', path: '/nutrition-specialist' },
+  ];
+
+  const handleDevMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setDevMenuAnchor(event.currentTarget);
+  };
+
+  const handleDevMenuClose = () => {
+    setDevMenuAnchor(null);
+  };
+
+  const handleDevDashboardClick = (path: string) => {
+    navigate(path);
+    handleDevMenuClose();
+  };
 
   const handleMobileMenuToggle = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -41,40 +64,31 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
     ];
 
     switch (user?.role) {
-      case 'BaseMember':
-        return [
-          { label: 'My Dashboard', path: '/dashboard' },
-          { label: 'Unit Leadership Dashboard', path: '/unit-leadership' },
-          { label: 'Fitness Specialist Dashboard', path: '/fitness-specialist' },
-          { label: 'Nutrition Specialist Dashboard', path: '/nutrition-specialist' },
-          { label: 'Base Member Dashboard', path: '/base-member' },
-          ...commonItems,
-        ];
       case 'UnitLeadership':
         return [
-          { label: 'My Dashboard', path: '/dashboard' },
+          // { label: 'My Dashboard', path: '/dashboard' },
           { label: 'Unit Leadership Dashboard', path: '/unit-leadership' },
           ...commonItems,
         ];
       case 'FitnessSpecialist':
         return [
-          { label: 'My Dashboard', path: '/dashboard' },
+          // { label: 'My Dashboard', path: '/dashboard' },
           { label: 'Fitness Specialist Dashboard', path: '/fitness-specialist' },
           ...commonItems,
         ];
       case 'NutritionSpecialist':
         return [
-          { label: 'My Dashboard', path: '/dashboard' },
+          // { label: 'My Dashboard', path: '/dashboard' },
           { label: 'Nutrition Specialist Dashboard', path: '/nutrition-specialist' },
           ...commonItems,
         ];
-      // case 'BaseMember':
-      //   return [
-      //     { label: 'My Dashboard', path: '/dashboard' },
-      //     { label: 'Workout Plan', path: '/workout-plan' },
-      //     { label: 'Nutrition Plan', path: '/nutrition-plan' },
-      //     ...commonItems,
-      //   ];
+      case 'BaseMember':
+        return [
+          // { label: 'My Dashboard', path: '/dashboard' },
+          { label: 'Workout Plan', path: '/workout-plan' },
+          { label: 'Nutrition Plan', path: '/nutrition-plan' },
+          ...commonItems,
+        ];
       default:
         return commonItems;
     }
@@ -123,6 +137,49 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
           >
             
           </Typography>
+          {!isMobile && process.env.NODE_ENV === 'development' && (
+            <>
+              <Button
+                color="inherit"
+                onClick={handleDevMenuOpen}
+                endIcon={<ChevronDown />}
+                sx={{
+                  mr: 2,
+                  color: theme.palette.warning.main,
+                  borderColor: theme.palette.warning.main,
+                  border: '1px solid',
+                  '&:hover': {
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.warning.contrastText,
+                  },
+                }}
+              >
+                Dashboards
+              </Button>
+              <Menu
+                anchorEl={devMenuAnchor}
+                open={Boolean(devMenuAnchor)}
+                onClose={handleDevMenuClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                {devDashboards.map((dashboard) => (
+                  <MenuItem
+                    key={dashboard.path}
+                    onClick={() => handleDevDashboardClick(dashboard.path)}
+                  >
+                    {dashboard.label}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </>
+          )}
           {isMobile ? (
             <IconButton
               edge="end"
