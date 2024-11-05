@@ -18,7 +18,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../contexts/AuthContext';
-
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -121,131 +120,160 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md">
-        <CardContent>
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            className="text-center"
-          >
-            Atlas Login
-          </Typography>
+    <div className="flex items-center min-h-screen">
+      {/* Left side with logo */}
+      <div className="flex-1 flex justify-center items-center">
+        <div style={{ 
+          position: 'relative',
+          width: '800px',
+          height: '800px',
+        }}>
+          <img 
+          src="/images/logos/AtlasLogo.png" 
+          alt="Atlas Logo" 
+            style={{ 
+              position: 'absolute',
+              width: '100%',
+              height: '100%',
+              opacity: 0.9,
+              maskImage: 'radial-gradient(circle at center, black 50%, transparent 75%)',
+              WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 75%)',
+            }}
+          />
+        </div>
+      </div>
 
-          {error && (
-            <Alert severity="error" sx={{ mb: 2 }}>
-              {error}
-            </Alert>
-          )}
+      {/* Right side with login form */}
+      <div className="flex-1 flex justify-start items-center"
+        style={{
+          zIndex: 1000
+        }}
+      >
+        <Card className="w-full max-w-md mr-16" style={{ backgroundColor: 'rgb(243 243 236)' }}>
+          <CardContent>
+            <Typography
+              variant="h4"
+              component="h1"
+              gutterBottom
+              className="text-center"
+            >
+              Atlas Login
+            </Typography>
 
-          <Snackbar
-            open={!!successMessage}
-            autoHideDuration={6000}
-            onClose={() => setSuccessMessage(null)}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          >
-            <Alert severity="success" onClose={() => setSuccessMessage(null)}>
-              {successMessage}
-            </Alert>
-          </Snackbar>
+            {error && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {error}
+              </Alert>
+            )}
 
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              margin="normal"
-              required
-            />
-            <TextField
-              fullWidth
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              margin="normal"
-              required
-            />
+            <Snackbar
+              open={!!successMessage}
+              autoHideDuration={6000}
+              onClose={() => setSuccessMessage(null)}
+              anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+              <Alert severity="success" onClose={() => setSuccessMessage(null)}>
+                {successMessage}
+              </Alert>
+            </Snackbar>
+
+            <form onSubmit={handleSubmit}>
+              <TextField
+                fullWidth
+                label="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                margin="normal"
+                required
+              />
+              <TextField
+                fullWidth
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                margin="normal"
+                required
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{ my: 1 }}
+              >
+                Log In
+              </Button>
+            </form>
+
             <Button
-              type="submit"
-              variant="contained"
-              color="primary"
+              variant="outlined"
+              color="secondary"
               fullWidth
               sx={{ my: 1 }}
+              onClick={() => setIsRegistering(true)}
             >
-              Log In
+              Register
             </Button>
-          </form>
 
-          <Button
-            variant="outlined"
-            color="secondary"
-            fullWidth
-            sx={{ my: 1 }}
-            onClick={() => setIsRegistering(true)}
-          >
-            Register
-          </Button>
-
-          <Typography variant="h6" className="mt-4 mb-2 text-center">
-            Development Login Options
-          </Typography>
-          <Grid container spacing={1}>
-            <Grid item xs={6}>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                onClick={() => handleDevLogin('SystemAdministrator')}
-              >
-                Admin
-              </Button>
+            <Typography variant="h6" className="mt-4 mb-2 text-center">
+              Development Login Options
+            </Typography>
+            <Grid container spacing={1}>
+              <Grid item xs={6}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={() => handleDevLogin('SystemAdministrator')}
+                >
+                  Admin
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={() => handleDevLogin('UnitLeadership')}
+                >
+                  Unit Leader
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={() => handleDevLogin('FitnessSpecialist')}
+                >
+                  Fitness Specialist
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={() => handleDevLogin('NutritionSpecialist')}
+                >
+                  Nutrition Specialist
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  fullWidth
+                  onClick={() => handleDevLogin('BaseMember')}
+                >
+                  Base Member
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                onClick={() => handleDevLogin('UnitLeadership')}
-              >
-                Unit Leader
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                onClick={() => handleDevLogin('FitnessSpecialist')}
-              >
-                Fitness Specialist
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                onClick={() => handleDevLogin('NutritionSpecialist')}
-              >
-                Nutrition Specialist
-              </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                variant="outlined"
-                color="primary"
-                fullWidth
-                onClick={() => handleDevLogin('BaseMember')}
-              >
-                Base Member
-              </Button>
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
 
       <Modal
         open={isRegistering}

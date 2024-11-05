@@ -46,7 +46,7 @@ const branchColors: Record<
     primary: '#1C3E6E',
     secondary: '#E9E9E9',
     text: '#FFFFFF',
-    background: '#F0F0F0',
+    background: '#2e2a2f',
   },
 };
 

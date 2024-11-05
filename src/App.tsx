@@ -67,7 +67,7 @@ const AppContent: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className="flex flex-col min-h-screen bg-gray-100">
+      <div className={`flex flex-col min-h-screen ${location.pathname === '/login' ? 'bg-[#2e2a2f]' : 'bg-gray-100'}`}>
         {isAuthenticated && <Header onLogout={handleLogout} />}
         <main className="flex-grow container mx-auto px-4 py-8">
           <Routes>
