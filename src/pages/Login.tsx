@@ -73,7 +73,7 @@ const Login: React.FC = () => {
       });
 
       if (success) {
-        setSuccessMessage('Registration successful! You can now log in.');
+        setSuccessMessage('Registration successful! Please check your email for verification.');
         setIsRegistering(false);
         // Reset registration form
         setRegistrationData({
@@ -99,7 +99,7 @@ const Login: React.FC = () => {
       SystemAdministrator: { email: 'admin@atlas.mil', password: 'admin123' },
       UnitLeadership: { email: 'leader@atlas.mil', password: 'leader123' },
       FitnessSpecialist: { email: 'fitness@atlas.mil', password: 'fitness123' },
-      NutritionSpecialist: {
+      NutritionSpecialist: { 
         email: 'nutrition@atlas.mil',
         password: 'nutrition123',
       },
@@ -107,6 +107,8 @@ const Login: React.FC = () => {
     };
 
     const { email, password } = devCredentials[role];
+    setError(null);
+    
     try {
       const success = await login(email, password, role);
       if (success) {
