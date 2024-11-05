@@ -33,34 +33,40 @@ const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlans }) => 
 
   const getNextWorkoutDate = (workoutPlan: WorkoutPlan) => {
     if (!workoutPlan || !workoutPlan.workouts || workoutPlan.workouts.length === 0) {
-      return 'Not scheduled';
+      return null;
     }
-    return workoutPlan.workouts[0].day;
+    const nextDate = workoutPlan.workouts[0].day;
+    return nextDate ? new Date(nextDate) : null;
   };
 
   return (
     <>
       {workoutPlans.length > 0 ? (
-        workoutPlans.map((workoutPlan) => (
-          <Card className="mb-4" key={workoutPlan.id}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Workout Dashboard for {workoutPlan.name}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Goal: {getWorkoutGoal(workoutPlan)} improvement
-              </Typography>
-              <Typography variant="body2" gutterBottom>
-                Progress:
-              </Typography>
-              <LinearProgress variant="determinate" value={calculateProgress(workoutPlan)} />
-              <Typography variant="body2" className="mt-2">
-                {/* Format in 04 Nov 2024 style */}
-                Next workout: {format(new Date(getNextWorkoutDate(workoutPlan)), 'dd MMM yyyy')}
-              </Typography>
-            </CardContent>
-          </Card>
-        ))
+        workoutPlans.map((workoutPlan) => {
+          const nextWorkoutDate = getNextWorkoutDate(workoutPlan);
+          
+          return (
+            <Card className="mb-4" key={workoutPlan.id}>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Workout Dashboard for {workoutPlan.name}
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  Goal: {getWorkoutGoal(workoutPlan)} improvement
+                </Typography>
+                <Typography variant="body2" gutterBottom>
+                  Progress:
+                </Typography>
+                <LinearProgress variant="determinate" value={calculateProgress(workoutPlan)} />
+                <Typography variant="body2" className="mt-2">
+                  Next workout: {nextWorkoutDate 
+                    ? format(nextWorkoutDate, 'dd MMM yyyy')
+                    : 'Not scheduled'}
+                </Typography>
+              </CardContent>
+            </Card>
+          );
+        })
       ) : (
         <Typography variant="body1" gutterBottom>
           No workout plans available. Please create a workout plan to see your dashboard.

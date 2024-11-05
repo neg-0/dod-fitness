@@ -44,7 +44,7 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   console.log('workoutPlan', workoutPlan);
 
   const handleViewChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newView: 'month' | 'week' | null
   ) => {
     if (newView !== null) {
@@ -131,9 +131,22 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   );
 
   const renderDayCard = (day: Date, isWeekView: boolean = false) => {
-    const workout = workoutPlan?.workouts?.find((w) =>
-      isSameDay(new Date(w.day), day)
-    );
+    const workout = workoutPlan?.workouts?.find((w) => {
+      const workoutDate = new Date(w.day);
+      return isSameDay(
+        new Date(Date.UTC(
+          workoutDate.getUTCFullYear(),
+          workoutDate.getUTCMonth(),
+          workoutDate.getUTCDate()
+        )),
+        new Date(Date.UTC(
+          day.getFullYear(),
+          day.getMonth(),
+          day.getDate()
+        ))
+      );
+    });
+
     const isCurrentMonth = isSameMonth(day, currentDate);
 
     return (
@@ -188,6 +201,7 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   };
 
   const handleUpdateWorkout = (updatedWorkout: DailyWorkout) => {
+    if (!workoutPlan) return;
     const updatedworkouts = workoutPlan.workouts.map((workout) =>
       isSameDay(new Date(workout.day), selectedDay!) ? updatedWorkout : workout
     );
