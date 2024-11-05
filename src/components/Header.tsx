@@ -10,7 +10,7 @@ import {
   useTheme,
   Badge,
 } from '@mui/material';
-import { Dumbbell, Menu as MenuIcon, Bell } from 'lucide-react';
+import { Menu as MenuIcon, Bell } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -81,16 +81,23 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   return (
     <>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar sx={{ backgroundColor: theme.palette.background.default }}>
           <IconButton
             edge="start"
             color="inherit"
             aria-label="home"
             component={Link}
             to={getHomeLink()}
-            sx={{ mr: 2 }}
+            sx={{ p: 0, ml: -1, mr: 2 }}
           >
-            <Dumbbell />
+            <img 
+              src="/images/logos/AtlasLogoSmall.png" 
+              alt="Atlas Logo" 
+              style={{ 
+                width: '64px',
+                height: '64px',
+              }}
+            />
           </IconButton>
           <Typography
             variant="h6"
@@ -105,7 +112,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
               },
             }}
           >
-            Atlas
+            
           </Typography>
           {isMobile ? (
             <IconButton
