@@ -55,7 +55,9 @@ const WorkoutCalendar: React.FC<WorkoutCalendarProps> = ({
   const renderMonthView = () => {
     const monthStart = startOfMonth(currentDate);
     const monthEnd = endOfMonth(currentDate);
-    const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    const startDate = startOfWeek(monthStart);
+    const endDate = endOfWeek(monthEnd);
+    const daysInMonth = eachDayOfInterval({ start: startDate, end: endDate });
 
     return (
       <div className="grid grid-cols-7 gap-2">
