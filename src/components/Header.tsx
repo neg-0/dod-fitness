@@ -41,6 +41,15 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
     ];
 
     switch (user?.role) {
+      case 'BaseMember':
+        return [
+          { label: 'My Dashboard', path: '/dashboard' },
+          { label: 'Unit Leadership Dashboard', path: '/unit-leadership' },
+          { label: 'Fitness Specialist Dashboard', path: '/fitness-specialist' },
+          { label: 'Nutrition Specialist Dashboard', path: '/nutrition-specialist' },
+          { label: 'Base Member Dashboard', path: '/base-member' },
+          ...commonItems,
+        ];
       case 'UnitLeadership':
         return [
           { label: 'My Dashboard', path: '/dashboard' },
@@ -59,13 +68,13 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
           { label: 'Nutrition Specialist Dashboard', path: '/nutrition-specialist' },
           ...commonItems,
         ];
-      case 'BaseMember':
-        return [
-          { label: 'My Dashboard', path: '/dashboard' },
-          { label: 'Workout Plan', path: '/workout-plan' },
-          { label: 'Nutrition Plan', path: '/nutrition-plan' },
-          ...commonItems,
-        ];
+      // case 'BaseMember':
+      //   return [
+      //     { label: 'My Dashboard', path: '/dashboard' },
+      //     { label: 'Workout Plan', path: '/workout-plan' },
+      //     { label: 'Nutrition Plan', path: '/nutrition-plan' },
+      //     ...commonItems,
+      //   ];
       default:
         return commonItems;
     }
