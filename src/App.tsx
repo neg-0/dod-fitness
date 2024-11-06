@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   Navigate,
+  useLocation,
 } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -52,6 +53,7 @@ const AppContent: React.FC = () => {
   const [branch, setBranch] = useState<MilitaryBranch>('Space Force');
   const [theme, setTheme] = useState(createBranchTheme(branch));
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     setTheme(createBranchTheme(branch));
@@ -72,7 +74,7 @@ const AppContent: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className={`flex flex-col min-h-screen ${window.location.pathname === '/login' ? theme.palette.background.default : 'bg-gray-100'}`}>
+      <div className={`flex flex-col min-h-screen ${location.pathname === '/login' ? theme.palette.background.default : 'bg-gray-100'}`}>
         {isAuthenticated && <Header onLogout={handleLogout} />}
         <main className="flex-grow container mx-auto px-4 py-8">
           <Routes>
