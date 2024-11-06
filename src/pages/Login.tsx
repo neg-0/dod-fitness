@@ -131,15 +131,13 @@ const Login: React.FC = () => {
           height: '800px',
         }}>
           <img 
-          src="/images/logos/AtlasLogo.png" 
+          src="/images/logos/AtlasLogoTransparent.png" 
           alt="Atlas Logo" 
             style={{ 
               position: 'absolute',
               width: '100%',
               height: '100%',
               opacity: 0.9,
-              maskImage: 'radial-gradient(circle at center, black 50%, transparent 75%)',
-              WebkitMaskImage: 'radial-gradient(circle at center, black 50%, transparent 75%)',
             }}
           />
         </div>
