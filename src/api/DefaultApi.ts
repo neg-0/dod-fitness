@@ -60,6 +60,10 @@ export class DefaultApi {
     return this.axiosInstance.post<NutritionPlan>('/generate-nutrition-plan', request);
   }
 
+  async nutritionPlanGet(): Promise<AxiosResponse<NutritionPlan[]>> {
+    return this.axiosInstance.get<NutritionPlan[]>('/nutrition-plan');
+  }
+
   async register(userData: {
     email: string;
     password: string;

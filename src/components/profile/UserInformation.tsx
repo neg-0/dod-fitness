@@ -84,6 +84,43 @@ const UserInformation: React.FC<UserInformationProps> = ({
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
+                <FormControl fullWidth required>
+                  <InputLabel>Gender</InputLabel>
+                  <Select
+                    name="gender"
+                    value={formData.gender}
+                    label="Gender"
+                    onChange={handleInputChange}
+                  >
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Prefer Not To Say">Prefer Not To Say</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Height (inches)"
+                  name="height"
+                  type="number"
+                  value={formData.height}
+                  onChange={handleInputChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Current Weight (lbs)"
+                  name="currentWeight"
+                  type="number"
+                  value={formData.currentWeight}
+                  onChange={handleInputChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
                 <FormControl fullWidth>
                   <InputLabel id="branch-select-label">
                     Military Branch
@@ -133,6 +170,9 @@ const UserInformation: React.FC<UserInformationProps> = ({
           <div>
             <Typography variant="body1">Name: {profileData.name}</Typography>
             <Typography variant="body1">Age: {profileData.age}</Typography>
+            <Typography variant="body1">Gender: {profileData.gender}</Typography>
+            <Typography variant="body1">Height: {profileData.height} inches</Typography>
+            <Typography variant="body1">Weight: {profileData.currentWeight} lbs</Typography>
             <Typography variant="body1">
               Military Branch: {profileData.branch}
             </Typography>

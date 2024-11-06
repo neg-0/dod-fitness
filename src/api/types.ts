@@ -17,28 +17,17 @@ export type AuthResponse = {
 };
 
 export type Profile = {
-  id: string;
-  name: string;
   age: number;
+  gender: "Male" | "Female" | "Prefer Not To Say";
   height: number;
-  weight: number;
-  branch:
-    | 'Army'
-    | 'Navy'
-    | 'Air Force'
-    | 'Marines'
-    | 'Coast Guard'
-    | 'Space Force';
-  currentInstallation?: string;
+  currentWeight: number;
+  activityLevel: string;
+  dietaryRestrictions: string[];
+  allergies: string[];
+  nutritionGoals: string;
+  fitnessGoals: string;
   fitnessWaivers: string;
-  dietaryRestrictions: string;
-  fitnessGoals?: string;
-  nutritionGoals?: string;
-  fitnessPreferences?: string;
-  diningFacilityUsage?: number;
-  onBaseRestaurantUsage?: number;
-  offBaseRestaurantUsage?: number;
-  homeCookingFrequency?: number;
+  fitnessPreferences: string;
 };
 
 export type WorkoutPlanRequest = {
@@ -74,8 +63,26 @@ export type WorkoutPlan = {
 };
 
 export type NutritionPlanRequest = {
-  goal: 'weight_loss' | 'muscle_gain' | 'maintenance';
-  dietaryRestrictions: string[];
+  personalInfo: {
+    age: number;
+    gender: string;
+    height: number;
+    currentWeight: number;
+    targetWeight: number;
+    activityLevel: string;
+    ptTestDate?: string;
+  };
+  fitnessGoals: {
+    primary: string;
+    targetWeight: number;
+    weeklyWorkouts: number;
+  };
+  dietaryInfo: {
+    restrictions: string[];
+    allergies: string[];
+    mealsPerDay: number;
+    diningFacilityAccess: boolean;
+  };
 };
 
 export type Macronutrients = {
@@ -97,7 +104,13 @@ export type Meal = {
 
 export type NutritionPlan = {
   id: string;
+  userId: string;
+  goal: string;
+  startDate: string;
+  endDate: string;
   dailyCalories: number;
-  macronutrients: Macronutrients;
+  protein: number;
+  carbohydrates: number;
+  fat: number;
   meals: Meal[];
 };

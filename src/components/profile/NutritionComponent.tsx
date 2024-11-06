@@ -7,6 +7,10 @@ import {
   CardContent,
   Grid,
   Chip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 import { Profile } from '../../api/types';
 
@@ -19,6 +23,13 @@ const NutritionComponent: React.FC<NutritionComponentProps> = ({
   profileData,
   onUpdate,
 }) => {
+  const activityLevels = [
+    { value: 'sedentary', label: 'Sedentary' },
+    { value: 'light', label: 'Lightly Active' },
+    { value: 'moderate', label: 'Moderately Active' },
+    { value: 'active', label: 'Very Active' },
+    { value: 'extreme', label: 'Extremely Active' }
+  ];
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState(profileData);
 
@@ -42,6 +53,22 @@ const NutritionComponent: React.FC<NutritionComponentProps> = ({
         {editMode ? (
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>Activity Level</InputLabel>
+                  <Select
+                    name="activityLevel"
+                    value={formData.activityLevel}
+                    onChange={handleInputChange}
+                  >
+                    {activityLevels.map((level) => (
+                      <MenuItem key={level.value} value={level.value}>
+                        {level.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
@@ -81,6 +108,7 @@ const NutritionComponent: React.FC<NutritionComponentProps> = ({
           </form>
         ) : (
           <div>
+            <Typography>Activity Level: {activityLevels.find(level => level.value === profileData.activityLevel)?.label || 'Not specified'}</Typography>
             <Typography>Dietary Restrictions:</Typography>
             {profileData.dietaryRestrictions ? (
               profileData.dietaryRestrictions
