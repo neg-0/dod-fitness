@@ -100,7 +100,6 @@ export function useApi() {
   }, []);
 
   const refreshToken = useCallback(async () => {
-
     if (ApiFactory.getMode() === 'mock') {
       setIsAuthenticated(true);
       return true;
@@ -109,7 +108,8 @@ export function useApi() {
     const refreshToken = mockStorage.getItem('refreshToken');
 
     if (!refreshToken) {
-      throw new Error('No refresh token available');
+      setIsAuthenticated(false);
+      return false;
     }
 
     try {
@@ -117,7 +117,7 @@ export function useApi() {
 
       if (ApiFactory.getMode() === 'live') {
         const api = ApiFactory.getApi();
-        const response = await api.authRefreshPost();
+        const response = await api.authRefreshPost(refreshToken);
         authResponse = response.data;
       } else {
         authResponse = await mockRefreshToken();
@@ -128,12 +128,12 @@ export function useApi() {
       mockStorage.setItem('accessToken', authResponse.access_token);
       return true;
     } catch (error) {
-      console.error('Token refresh failed:', error);
-      ApiFactory.handleApiFailure();
-      logout();
+      setIsAuthenticated(false);
+      mockStorage.removeItem('accessToken');
+      mockStorage.removeItem('refreshToken');
       return false;
     }
-  }, [logout]);
+  }, []);
 
   const checkAuthStatus = useCallback(async () => {
 

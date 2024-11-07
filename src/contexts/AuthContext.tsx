@@ -48,6 +48,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [authUser, setAuthUser] = useState<User | null>(null);
 
   useEffect(() => {
+    const handleAuthError = () => {
+      apiLogout();
+      setAuthUser(null);
+      window.location.replace('/login');
+    };
+
+    window.addEventListener('auth-error', handleAuthError);
+    return () => window.removeEventListener('auth-error', handleAuthError);
+  }, [apiLogout]);
+
+  useEffect(() => {
     const fetchUserData = async () => {
       if (isAuthenticated) {
         const userData = await apiCheckAuthStatus(); // Ensure user data is fetched

@@ -9,6 +9,7 @@ import {
   NutritionPlan,
   AxiosResponse,
 } from './types';
+import { handle401Error } from '../utils/errorHandling';
 
 export class DefaultApi {
   axiosInstance: AxiosInstance;
@@ -18,8 +19,14 @@ export class DefaultApi {
       baseURL,
       headers: accessToken ? { Authorization: `Bearer ${accessToken}` } : {},
     });
-  }
 
+    // Add response interceptor
+    this.axiosInstance.interceptors.response.use(
+    (response) => response,
+    (error) => handle401Error(error)
+  );
+  }
+  
   setAccessToken(accessToken: string) {
     this.axiosInstance.defaults.headers.common[
       'Authorization'
