@@ -38,7 +38,7 @@ const FitnessComponent: React.FC<FitnessComponentProps> = ({ profileData, onUpda
                   name="fitnessWaivers"
                   multiline
                   rows={3}
-                  value={formData.fitnessWaivers}
+                  value={formData.fitnessWaivers || ''}
                   onChange={handleInputChange}
                 />
               </Grid>
