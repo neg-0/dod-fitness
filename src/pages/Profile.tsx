@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid, CircularProgress } from '@mui/material';
+import { Typography, Grid, CircularProgress, Snackbar, Alert } from '@mui/material';
 import { useApi } from '../hooks/useApi';
 import { Profile as ProfileType } from '../api/types';
 import UserInformation from '../components/profile/UserInformation';
@@ -17,6 +17,15 @@ const Profile: React.FC<ProfileProps> = ({ onBranchChange }) => {
   const [profileData, setProfileData] = useState<ProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({
+    open: false,
+    message: '',
+    severity: 'success',
+  });
 
   useEffect(() => {
     console.log('Profile component mounted');
@@ -59,11 +68,23 @@ const Profile: React.FC<ProfileProps> = ({ onBranchChange }) => {
       if (updatedData.branch) {
         onBranchChange(updatedData.branch as MilitaryBranch);
       }
-      alert('Profile updated successfully!');
+      setToast({
+        open: true,
+        message: 'Profile updated successfully',
+        severity: 'success',
+      });
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile. Please try again.');
+      setToast({
+        open: true,
+        message: 'Failed to update profile. Please try again.',
+        severity: 'error',
+      });
     }
+  };
+
+  const handleCloseToast = () => {
+    setToast(prev => ({ ...prev, open: false }));
   };
 
   if (loading) {
@@ -109,6 +130,17 @@ const Profile: React.FC<ProfileProps> = ({ onBranchChange }) => {
           <GoalsProgressTracker profileData={profileData} />
         </Grid> */}
       </Grid>
+      <Snackbar 
+        open={toast.open} 
+        autoHideDuration={4000} 
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        style={{ top: '80px', boxShadow: '0px 0px 10px 0px rgba(0, 0, 0, 0.2)' }}
+      >
+        <Alert onClose={handleCloseToast} severity={toast.severity}>
+          {toast.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
