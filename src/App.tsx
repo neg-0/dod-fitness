@@ -29,20 +29,26 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; allowedRoles?: strin
   allowedRoles,
 }) => {
   const { isAuthenticated, user } = useAuth();
+  const location = useLocation();
 
-  console.log('isAuth', isAuthenticated, 'user', user)
+  useEffect(() => {
+    if (!isAuthenticated) {
+      // Store the attempted URL for redirect after login
+      sessionStorage.setItem('redirectUrl', location.pathname);
+    }
+  }, [isAuthenticated, location]);
 
   // If the user is dustin@negativezeroinc.com or evan.colon98@gmail.com, then they are authenticated
   if (user && (user.email === 'dustin@negativezeroinc.com' || user.email === 'evan.colon98@gmail.com')) {
     return <>{children}</>;
   }
-  
+
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (allowedRoles && user && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
