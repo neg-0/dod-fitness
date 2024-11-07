@@ -221,7 +221,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                   }}
                 >
                   {item.label}
-                  {item.notifications && (
+                  {/* {item.notifications && (
                     <Badge
                       badgeContent={item.notifications}
                       color="secondary"
@@ -229,7 +229,7 @@ const Header: React.FC<HeaderProps> = ({ onLogout }) => {
                     >
                       <Bell size={16} />
                     </Badge>
-                  )}
+                  )} */}
                 </Button>
               ))}
               <Button
