@@ -22,13 +22,10 @@ const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlans }) => 
   };
 
   const getWorkoutGoal = (workoutPlan: WorkoutPlan) => {
-    if (!workoutPlan || !workoutPlan.workouts || workoutPlan.workouts.length === 0) {
+    if (!workoutPlan || !workoutPlan.goal) {
       return 'Not specified';
     }
-    if (workoutPlan.workouts[0].exercises && workoutPlan.workouts[0].exercises.length > 0) {
-      return workoutPlan.workouts[0].exercises[0].name;
-    }
-    return 'Not specified';
+    return workoutPlan.goal;
   };
 
   const getNextWorkoutDate = (workoutPlan: WorkoutPlan) => {
@@ -60,7 +57,7 @@ const WorkoutDashboard: React.FC<WorkoutDashboardProps> = ({ workoutPlans }) => 
                   Workout Dashboard for {workoutPlan.name}
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  Goal: {getWorkoutGoal(workoutPlan)} improvement
+                  Goal: {getWorkoutGoal(workoutPlan)}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
                   Progress:

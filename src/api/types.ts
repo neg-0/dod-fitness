@@ -60,6 +60,7 @@ export type DailyWorkout = {
 export type WorkoutPlan = {
   id: string;
   name: string;
+  goal: string;
   startDate: string;
   endDate: string;
   workouts: DailyWorkout[];
