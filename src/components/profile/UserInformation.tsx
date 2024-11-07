@@ -10,6 +10,7 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  SelectChangeEvent,
 } from '@mui/material';
 import { Profile } from '../../api/types';
 import { MilitaryBranch } from '../../theme/theme';
@@ -28,13 +29,17 @@ const UserInformation: React.FC<UserInformationProps> = ({
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState(profileData);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-  ) => {
+  const handleTextFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name as string]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (e: SelectChangeEvent) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
     if (name === 'branch') {
-      onBranchChange(value as MilitaryBranch);
+      // Skipping this for now to maintain the theme across branches
+      // onBranchChange(value as MilitaryBranch);
     }
   };
 
@@ -67,8 +72,8 @@ const UserInformation: React.FC<UserInformationProps> = ({
                   fullWidth
                   label="Name"
                   name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
+                  value={formData.name || ''}
+                  onChange={handleTextFieldChange}
                   required
                 />
               </Grid>
@@ -78,8 +83,8 @@ const UserInformation: React.FC<UserInformationProps> = ({
                   label="Age"
                   name="age"
                   type="number"
-                  value={formData.age}
-                  onChange={handleInputChange}
+                  value={formData.age || ''}
+                  onChange={handleTextFieldChange}
                   required
                 />
               </Grid>
@@ -88,9 +93,9 @@ const UserInformation: React.FC<UserInformationProps> = ({
                   <InputLabel>Gender</InputLabel>
                   <Select
                     name="gender"
-                    value={formData.gender}
+                    value={formData.gender || ''}
                     label="Gender"
-                    onChange={handleInputChange}
+                    onChange={handleSelectChange}
                   >
                     <MenuItem value="Male">Male</MenuItem>
                     <MenuItem value="Female">Female</MenuItem>
@@ -104,8 +109,8 @@ const UserInformation: React.FC<UserInformationProps> = ({
                   label="Height (inches)"
                   name="height"
                   type="number"
-                  value={formData.height}
-                  onChange={handleInputChange}
+                  value={formData.height || ''}
+                  onChange={handleTextFieldChange}
                   required
                 />
               </Grid>
@@ -115,8 +120,8 @@ const UserInformation: React.FC<UserInformationProps> = ({
                   label="Current Weight (lbs)"
                   name="currentWeight"
                   type="number"
-                  value={formData.currentWeight}
-                  onChange={handleInputChange}
+                  value={formData.currentWeight || ''}
+                  onChange={handleTextFieldChange}
                   required
                 />
               </Grid>
@@ -129,9 +134,9 @@ const UserInformation: React.FC<UserInformationProps> = ({
                     labelId="branch-select-label"
                     id="branch-select"
                     name="branch"
-                    value={formData.branch}
+                    value={formData.branch || ''}
                     label="Military Branch"
-                    onChange={handleInputChange}
+                    onChange={handleSelectChange}
                     required
                   >
                     {branches.map((branch) => (
@@ -148,7 +153,7 @@ const UserInformation: React.FC<UserInformationProps> = ({
                   label="Current Installation"
                   name="currentInstallation"
                   value={formData.currentInstallation || ''}
-                  onChange={handleInputChange}
+                  onChange={handleTextFieldChange}
                 />
               </Grid>
               <Grid item xs={12}>

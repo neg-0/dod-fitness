@@ -17,10 +17,13 @@ export type AuthResponse = {
 };
 
 export type Profile = {
+  name: string;
   age: number;
   gender: "Male" | "Female" | "Prefer Not To Say";
   height: number;
   currentWeight: number;
+  branch: string;
+  currentInstallation: string;
   activityLevel: string;
   dietaryRestrictions: string[];
   allergies: string[];
